@@ -100,12 +100,12 @@ export async function sendEmailOTP(email: string, code: string, name?: string): 
   `;
 
   try {
-    const result = await sendEmail({
+    await sendEmail({
       to: email,
       subject: `[Flowery] Mã xác thực: ${code}`,
       html,
     });
-    return result;
+    return true;
   } catch {
     return false;
   }

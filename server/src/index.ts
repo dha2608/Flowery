@@ -1,8 +1,10 @@
 import 'dotenv/config';
+import { createServer } from 'http';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import compression from 'compression';
 import { connectDB } from './config/database.js';
 import { env } from './config/env.js';
 import { errorHandler } from './middleware/error-handler.js';
@@ -29,10 +31,16 @@ import contactRouter from './routes/contact.routes.js';
 import flowerMarkRouter from './routes/flower-mark.routes.js';
 import { startCronJobs } from './jobs/index.js';
 import { logger, httpLogStream, logError } from './utils/logger.js';
+import { initWebSocket } from './utils/websocket.js';
 
 const app = express();
+const server = createServer(app);
+
+// Initialize WebSocket
+initWebSocket(server);
 
 // Security & parsing middleware
+app.use(compression()); // Gzip compression
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -40,12 +48,7 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: [
-          "'self'",
-          'data:',
-          'https://res.cloudinary.com',
-          'https://images.unsplash.com',
-        ],
+        imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com', 'https://images.unsplash.com'],
         connectSrc: ["'self'"],
       },
     },
@@ -100,11 +103,12 @@ app.use(errorHandler);
 const start = async () => {
   await connectDB();
   startCronJobs();
-  app.listen(env.PORT, () => {
+  server.listen(env.PORT, () => {
     logger.info(`Flowery API running on port ${env.PORT} in ${env.NODE_ENV} mode`);
+    logger.info(`WebSocket server available at ws://localhost:${env.PORT}/ws`);
   });
 };
 
 start().catch((err) => logError(err, { context: 'startup' }));
 
-export { app };
+export { app, server };
