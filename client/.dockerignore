@@ -1,0 +1,47 @@
+# ─── Docker Ignore for Client ─────────────────────────────────────────────────
+
+# Dependencies
+node_modules
+npm-debug.log
+
+# Next.js build output (will be generated in container)
+.next
+out
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage
+.nyc_output
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Storybook
+.storybook
+storybook-static
