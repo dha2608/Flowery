@@ -5,8 +5,20 @@ import crypto from 'crypto';
 import { requireAuth } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { User } from '../models/index.js';
-import { BadRequestError, ConflictError, UnauthorizedError, AppError } from '../middleware/error-handler.js';
-import { getGoogleAuthUrl, getGoogleTokens, getGoogleUser } from '../utils/oauth.js';
+import {
+  BadRequestError,
+  ConflictError,
+  UnauthorizedError,
+  AppError,
+} from '../middleware/error-handler.js';
+import {
+  getGoogleAuthUrl,
+  getGoogleTokens,
+  getGoogleUser,
+  getFacebookAuthUrl,
+  getFacebookTokens,
+  getFacebookUser,
+} from '../utils/oauth.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/tokens.js';
 import { sendEmail } from '../utils/email.js';
 import { verificationEmail, passwordResetEmail } from '../utils/email-templates.js';
@@ -15,9 +27,8 @@ import { logSecurityEvent } from '../utils/security-logger.js';
 
 // ─── Async Handler ────────────────────────────────────────────────────────────
 
-const asyncHandler =
-  (fn: Function) => (req: Request, res: Response, next: NextFunction) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
+const asyncHandler = (fn: Function) => (req: Request, res: Response, next: NextFunction) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 // ─── Validation Schemas ───────────────────────────────────────────────────────
 
@@ -34,10 +45,7 @@ const registerSchema = z.object({
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(100, 'Name must be at most 100 characters'),
-  phone: z
-    .string()
-    .regex(VN_PHONE_REGEX, 'Invalid Vietnamese phone number')
-    .optional(),
+  phone: z.string().regex(VN_PHONE_REGEX, 'Invalid Vietnamese phone number').optional(),
 });
 
 const loginSchema = z.object({
@@ -162,7 +170,11 @@ authRouter.post(
         lockUntil: user.lockUntil,
         ip: req.ip,
       });
-      throw new AppError('Tài khoản tạm khóa. Vui lòng thử lại sau 15 phút.', 429, 'ACCOUNT_LOCKED');
+      throw new AppError(
+        'Tài khoản tạm khóa. Vui lòng thử lại sau 15 phút.',
+        429,
+        'ACCOUNT_LOCKED'
+      );
     }
 
     // If lockout period has expired, reset the counter
@@ -514,6 +526,90 @@ authRouter.get(
           avatar: { url: googleUser.picture, publicId: '' },
           emailVerified: true,
           authProviders: [{ provider: 'google', providerId: googleUser.sub }],
+          passwordHash: await bcrypt.hash(randomPassword, 10),
+        });
+      }
+    }
+
+    // Generate JWT tokens
+    const jwtPayload = { userId: String(user._id), email: user.email, role: user.role };
+    const accessToken = generateAccessToken(jwtPayload);
+    const refreshToken = generateRefreshToken(jwtPayload);
+
+    // Persist refresh token and update last login
+    user.refreshTokens.push(refreshToken);
+    user.lastLoginAt = new Date();
+    await user.save();
+
+    // Redirect to client with tokens in query params
+    const params = new URLSearchParams({
+      accessToken,
+      refreshToken,
+      userId: String(user._id),
+    });
+    res.redirect(`${env.CLIENT_URL}/auth/callback?${params.toString()}`);
+  })
+);
+
+// ─── Facebook OAuth ───────────────────────────────────────────────────────────
+
+// GET /api/v1/auth/facebook - Redirect to Facebook consent screen
+authRouter.get(
+  '/facebook',
+  asyncHandler(async (_req: Request, res: Response) => {
+    if (!env.FACEBOOK_APP_ID) {
+      throw new BadRequestError('Facebook OAuth chưa được cấu hình');
+    }
+    res.redirect(getFacebookAuthUrl());
+  })
+);
+
+// GET /api/v1/auth/facebook/callback - Handle Facebook callback
+authRouter.get(
+  '/facebook/callback',
+  asyncHandler(async (req: Request, res: Response) => {
+    const { code } = req.query;
+    if (!code || typeof code !== 'string') {
+      throw new BadRequestError('Mã xác thực không hợp lệ');
+    }
+
+    const fbTokens = await getFacebookTokens(code);
+    const fbUser = await getFacebookUser(fbTokens.access_token);
+
+    // Find or create user
+    let user = await User.findOne({
+      'authProviders.provider': 'facebook',
+      'authProviders.providerId': fbUser.id,
+    }).select('+refreshTokens');
+
+    if (!user) {
+      // Check if email already exists (Facebook may not always provide email)
+      if (fbUser.email) {
+        const existingUser = await User.findOne({ email: fbUser.email }).select('+refreshTokens');
+
+        if (existingUser) {
+          // Link Facebook to existing account
+          existingUser.authProviders.push({ provider: 'facebook', providerId: fbUser.id });
+          if (!existingUser.avatar && fbUser.picture?.data?.url) {
+            existingUser.avatar = { url: fbUser.picture.data.url, publicId: '' };
+          }
+          user = existingUser;
+        }
+      }
+
+      if (!user) {
+        // Create new user
+        const randomPassword = crypto.randomBytes(32).toString('hex');
+        const email = fbUser.email || `fb_${fbUser.id}@flowery.local`;
+
+        user = await User.create({
+          email,
+          name: fbUser.name,
+          avatar: fbUser.picture?.data?.url
+            ? { url: fbUser.picture.data.url, publicId: '' }
+            : undefined,
+          emailVerified: !!fbUser.email,
+          authProviders: [{ provider: 'facebook', providerId: fbUser.id }],
           passwordHash: await bcrypt.hash(randomPassword, 10),
         });
       }

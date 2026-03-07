@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+/* ─── Light Theme (Default) ────────────────────────────────────────────────── */
+
 @theme {
   /* Primary — deep rose with richer depth */
   --color-primary-50: #fef2f3;
@@ -419,4 +421,47 @@
 
 .animate-fade-up {
   animation: fade-up 0.5s ease-out forwards;
+}
+
+/* ─── Dark Theme ───────────────────────────────────────────────────────────── */
+
+.dark {
+  /* Surfaces — dark warm tones */
+  --color-surface: #1a1614;
+  --color-surface-secondary: #242220;
+  --color-surface-elevated: #2d2a28;
+  --color-surface-sunken: #141210;
+  --color-surface-overlay: rgba(26, 22, 20, 0.9);
+
+  /* Borders — darker tones */
+  --color-border: #3d3835;
+  --color-border-light: #2d2a28;
+  --color-border-strong: #4d4845;
+
+  /* Text — light on dark */
+  --color-text-primary: #faf9f7;
+  --color-text-secondary: #a8a4a0;
+  --color-text-tertiary: #8b8784;
+  --color-text-muted: #706963;
+
+  /* Shadows — darker glows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.3), 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(232, 77, 110, 0.2), 0 0 40px rgba(232, 77, 110, 0.1);
+
+  /* Background override */
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.dark .animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(232, 77, 110, 0.15) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
 }

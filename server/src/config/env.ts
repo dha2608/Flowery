@@ -49,6 +49,24 @@ const envSchema = z.object({
     .string()
     .optional()
     .default('http://localhost:3001/api/v1/auth/google/callback'),
+
+  // Facebook OAuth
+  FACEBOOK_APP_ID: z.string().optional(),
+  FACEBOOK_APP_SECRET: z.string().optional(),
+  FACEBOOK_CALLBACK_URL: z
+    .string()
+    .optional()
+    .default('http://localhost:3001/api/v1/auth/facebook/callback'),
+
+  // 2FA/OTP (Twilio for SMS)
+  TWILIO_ACCOUNT_SID: z.string().optional(),
+  TWILIO_AUTH_TOKEN: z.string().optional(),
+  TWILIO_PHONE_NUMBER: z.string().optional(),
+
+  // Firebase (Push Notifications)
+  FIREBASE_PROJECT_ID: z.string().optional(),
+  FIREBASE_PRIVATE_KEY: z.string().optional(),
+  FIREBASE_CLIENT_EMAIL: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);
