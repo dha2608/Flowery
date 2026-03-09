@@ -1,13 +1,7 @@
 'use client';
 
 import { TrendingUp, TrendingDown, Star, Users, Store, ShoppingBag } from 'lucide-react';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  Spinner,
-} from '@/components/ui';
+import { Card, CardHeader, CardTitle, CardContent, Spinner } from '@/components/ui';
 import { useAdminStats } from '@/hooks/use-admin';
 import { formatPrice, cn } from '@/lib/utils';
 
@@ -19,14 +13,10 @@ function GrowthIndicator({ value }: { value: number }) {
     <span
       className={cn(
         'inline-flex items-center gap-0.5 text-xs font-medium',
-        isPositive ? 'text-emerald-600' : 'text-red-500',
+        isPositive ? 'text-emerald-600' : 'text-red-500'
       )}
     >
-      {isPositive ? (
-        <TrendingUp className="h-3 w-3" />
-      ) : (
-        <TrendingDown className="h-3 w-3" />
-      )}
+      {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
       {Math.abs(value)}%
     </span>
   );
@@ -65,7 +55,12 @@ export default function AdminAnalyticsPage() {
     );
   }
 
-  const { overview, today, topShops, recentOrders } = stats;
+  const {
+    overview = { totalUsers: 0, totalShops: 0, totalOrders: 0, totalRevenue: 0, avgRating: 0 },
+    today = { orders: 0, revenue: 0, newUsers: 0, newShops: 0, newOrders: 0 },
+    topShops = [],
+    recentOrders = [],
+  } = stats;
 
   // Calculate revenue growth (today vs average from overview)
   const avgDailyRevenue =
@@ -93,7 +88,7 @@ export default function AdminAnalyticsPage() {
   ];
 
   // Users by role — estimated from overview
-                    const roleData = [
+  const roleData = [
     {
       label: 'Người dùng',
       value: Math.max(0, overview.totalUsers - overview.totalShops),
@@ -108,9 +103,7 @@ export default function AdminAnalyticsPage() {
     <div className="space-y-6">
       {/* Revenue overview */}
       <div>
-        <h2 className="label-text mb-3">
-          Doanh thu
-        </h2>
+        <h2 className="label-text mb-3">Doanh thu</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardContent className="py-5">
@@ -179,11 +172,11 @@ export default function AdminAnalyticsPage() {
               <ShoppingBag className="h-4 w-4 text-stone-500" />
               Đơn hàng theo trạng thái
             </CardTitle>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-xs text-gray-400">
               Dựa trên {totalRecentOrders} đơn hàng gần đây
             </p>
           </CardHeader>
-          <CardContent className="pt-2 space-y-3">
+          <CardContent className="space-y-3 pt-2">
             {ORDER_STATUSES.map(({ key, label, color }) => {
               const count = orderStatusCounts[key] ?? 0;
               const pct = totalRecentOrders > 0 ? Math.round((count / totalRecentOrders) * 100) : 0;
@@ -209,11 +202,11 @@ export default function AdminAnalyticsPage() {
               <Users className="h-4 w-4 text-stone-500" />
               Người dùng theo vai trò
             </CardTitle>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Tổng {overview.totalUsers.toLocaleString('vi-VN')} người dùng
+            <p className="mt-0.5 text-xs text-gray-400">
+              Tổng {(overview.totalUsers ?? 0).toLocaleString('vi-VN')} người dùng
             </p>
           </CardHeader>
-          <CardContent className="pt-2 space-y-4">
+          <CardContent className="space-y-4 pt-2">
             {roleData.map(({ label, value, color }) => {
               const pct = totalRoleUsers > 0 ? Math.round((value / totalRoleUsers) * 100) : 0;
               return (
@@ -229,17 +222,17 @@ export default function AdminAnalyticsPage() {
               );
             })}
 
-            <div className="mt-4 border-t border-gray-100 pt-3 space-y-2">
+            <div className="mt-4 space-y-2 border-t border-gray-100 pt-3">
               <div className="flex justify-between text-sm">
                 <span className="text-stone-500">Người dùng mới hôm nay</span>
                 <span className="font-semibold text-stone-700">
-                  +{today.newUsers.toLocaleString('vi-VN')}
+                  +{(today.newUsers ?? 0).toLocaleString('vi-VN')}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-stone-500">Cửa hàng mới hôm nay</span>
                 <span className="font-semibold text-emerald-600">
-                  +{today.newShops.toLocaleString('vi-VN')}
+                  +{(today.newShops ?? 0).toLocaleString('vi-VN')}
                 </span>
               </div>
             </div>
@@ -251,13 +244,13 @@ export default function AdminAnalyticsPage() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-base">
-              <Store className="h-4 w-4 text-stone-500" />
+            <Store className="h-4 w-4 text-stone-500" />
             Top cửa hàng hoạt động tốt nhất
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-2">
           {topShops.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-6">Chưa có dữ liệu</p>
+            <p className="py-6 text-center text-sm text-gray-400">Chưa có dữ liệu</p>
           ) : (
             <div className="space-y-3">
               {topShops.map((shop, i) => {
@@ -276,23 +269,21 @@ export default function AdminAnalyticsPage() {
                                 ? 'bg-stone-400'
                                 : i === 2
                                   ? 'bg-orange-400'
-                                  : 'bg-stone-200 text-stone-700',
+                                  : 'bg-stone-200 text-stone-700'
                           )}
                         >
                           {i + 1}
                         </span>
-                        <span className="font-medium text-gray-900 truncate max-w-[160px]">
+                        <span className="max-w-[160px] truncate font-medium text-gray-900">
                           {shop.name}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 shrink-0">
-                        <span className="flex items-center gap-1 text-amber-500 text-xs">
+                      <div className="flex shrink-0 items-center gap-4">
+                        <span className="flex items-center gap-1 text-xs text-amber-500">
                           <Star className="h-3 w-3 fill-current" />
-                          {shop.rating.toFixed(1)}
+                          {(shop.rating ?? 0).toFixed(1)}
                         </span>
-                        <span className="text-gray-500 text-xs">
-                          {shop.orders} đơn
-                        </span>
+                        <span className="text-xs text-gray-500">{shop.orders} đơn</span>
                         <span className="font-semibold text-gray-900">
                           {formatPrice(shop.revenue)}
                         </span>
