@@ -307,7 +307,7 @@ export default function HomePage() {
         <div className="container-wide relative">
           <ScrollReveal className="mb-12 text-center">
             <p className="bg-primary-50 text-primary-600 mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium">
-              <Heart className="h-4 w-4" />
+              <Sparkles className="h-4 w-4" />
               Chọn theo cảm xúc
             </p>
             <h2 className="font-serif text-3xl font-bold text-stone-900 md:text-4xl">
