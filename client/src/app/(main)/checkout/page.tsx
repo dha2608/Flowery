@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import {
   MapPin,
   Phone,
@@ -25,6 +26,7 @@ import { useCreateOrder, type PaymentMethod } from '@/hooks/use-orders';
 import { formatPrice } from '@/lib/utils';
 import { Button, Input, Textarea, Card, CardHeader, CardContent, Spinner } from '@/components/ui';
 import { Container } from '@/components/layout';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { cn } from '@/lib/utils';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -223,6 +225,11 @@ export default function CheckoutPage() {
       // Remove gift message from localStorage after successful order
       localStorage.removeItem('flowery-gift-message');
 
+      // Show success toast
+      toast.success('Đặt hàng thành công!', {
+        description: `Đã tạo ${results.length} đơn hàng. Bạn sẽ được chuyển đến trang xác nhận.`,
+      });
+
       // Navigate to success page with order info
       const firstId = results[0]?._id;
       if (firstId) {
@@ -233,6 +240,9 @@ export default function CheckoutPage() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Đặt hàng thất bại. Vui lòng thử lại.';
       setSubmitError(msg);
+      toast.error('Đặt hàng thất bại', {
+        description: msg,
+      });
     }
   };
 
@@ -251,6 +261,12 @@ export default function CheckoutPage() {
 
   return (
     <Container className="py-8 pb-16">
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        items={[{ label: 'Giỏ hàng', href: '/cart' }, { label: 'Thanh toán' }]}
+        className="mb-6"
+      />
+
       <h1 className="heading-md text-text-primary mb-8">Thanh toán</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>

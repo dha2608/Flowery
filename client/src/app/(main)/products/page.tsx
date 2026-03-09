@@ -27,6 +27,7 @@ import {
   type SortOrder,
 } from '@/hooks/use-products';
 import { cn } from '@/lib/utils';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -381,6 +382,9 @@ export default function ProductsPage() {
       </div>
 
       <Container className="relative z-10 py-10">
+        {/* Breadcrumbs */}
+        <Breadcrumbs items={[{ label: 'Sản phẩm hoa' }]} className="mb-6" />
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

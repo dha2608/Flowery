@@ -16,6 +16,7 @@ import {
   type SortOrder,
 } from '@/hooks/use-flowers';
 import { cn } from '@/lib/utils';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -396,6 +397,9 @@ export default function FlowersPage() {
       </div>
 
       <Container className="relative z-10 py-10">
+        {/* Breadcrumbs */}
+        <Breadcrumbs items={[{ label: 'Bộ sưu tập hoa' }]} className="mb-6" />
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

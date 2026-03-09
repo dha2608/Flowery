@@ -18,6 +18,7 @@ import { useOrders, type OrderStatus } from '@/hooks/use-orders';
 import { formatPrice, formatDateTime } from '@/lib/utils';
 import { Badge, Card, CardContent, Spinner } from '@/components/ui';
 import { Container } from '@/components/layout';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { cn } from '@/lib/utils';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -32,7 +33,10 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
   refunded: 'Đã hoàn tiền',
 };
 
-const STATUS_BADGE: Record<OrderStatus, 'warning' | 'info' | 'primary' | 'default' | 'success' | 'danger'> = {
+const STATUS_BADGE: Record<
+  OrderStatus,
+  'warning' | 'info' | 'primary' | 'default' | 'success' | 'danger'
+> = {
   pending: 'warning',
   confirmed: 'info',
   preparing: 'primary',
@@ -69,7 +73,11 @@ export default function OrdersPage() {
   const [activeStatus, setActiveStatus] = useState('');
   const [page, setPage] = useState(1);
 
-  const { data: response, isLoading, isError } = useOrders({ page, limit: 10, status: activeStatus });
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useOrders({ page, limit: 10, status: activeStatus });
 
   const orders = response?.orders ?? [];
   const pagination = response?.pagination;
@@ -89,6 +97,9 @@ export default function OrdersPage() {
 
   return (
     <Container className="py-8 pb-16">
+      {/* Breadcrumbs */}
+      <Breadcrumbs items={[{ label: 'Đơn hàng của tôi' }]} className="mb-4" />
+
       {/* Header */}
       <div className="mb-6">
         <h1 className="font-serif text-2xl font-bold text-stone-900">Đơn hàng của tôi</h1>
@@ -101,10 +112,10 @@ export default function OrdersPage() {
             key={tab.value}
             onClick={() => handleTabChange(tab.value)}
             className={cn(
-              'flex-shrink-0 px-4 py-2.5 text-sm font-medium transition-all border-b-2 -mb-px',
+              '-mb-px flex-shrink-0 border-b-2 px-4 py-2.5 text-sm font-medium transition-all',
               activeStatus === tab.value
                 ? 'border-primary-600 text-primary-700'
-                : 'border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300',
+                : 'border-transparent text-stone-500 hover:border-stone-300 hover:text-stone-700'
             )}
           >
             {tab.label}
@@ -139,7 +150,7 @@ export default function OrdersPage() {
           {!activeStatus && (
             <button
               onClick={() => router.push('/flowers')}
-              className="rounded-xl bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700"
+              className="bg-primary-600 hover:bg-primary-700 rounded-xl px-6 py-2.5 text-sm font-medium text-white transition-colors"
             >
               Khám phá hoa
             </button>
@@ -179,7 +190,7 @@ export default function OrdersPage() {
 
                       {/* Total & arrow */}
                       <div className="flex shrink-0 flex-col items-end gap-2">
-                        <span className="font-bold text-primary-600">
+                        <span className="text-primary-600 font-bold">
                           {formatPrice(order.pricing.totalAmount)}
                         </span>
                         <ChevronRight className="h-4 w-4 text-stone-400" />
@@ -199,7 +210,7 @@ export default function OrdersPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={!pagination.hasPrev}
-            className="rounded-lg border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-lg border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Trước
           </button>
@@ -215,7 +226,7 @@ export default function OrdersPage() {
                     'h-9 w-9 rounded-lg text-sm font-medium transition-colors',
                     p === page
                       ? 'bg-primary-600 text-white'
-                      : 'border border-stone-200 text-stone-700 hover:bg-stone-50',
+                      : 'border border-stone-200 text-stone-700 hover:bg-stone-50'
                   )}
                 >
                   {p}
@@ -226,7 +237,7 @@ export default function OrdersPage() {
           <button
             onClick={() => setPage((p) => p + 1)}
             disabled={!pagination.hasNext}
-            className="rounded-lg border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-lg border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Sau
           </button>
