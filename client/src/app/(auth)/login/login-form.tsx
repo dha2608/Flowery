@@ -1,11 +1,26 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useMemo } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Eye, EyeOff, AlertCircle, Loader2, Mail, Lock, Sparkles } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Loader2,
+  Mail,
+  Lock,
+  Sparkles,
+  CheckCircle2,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
+
+// ─── Email validation helper ──────────────────────────────────────────────────
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 // ─── Google Icon ──────────────────────────────────────────────────────────────
 
@@ -38,11 +53,15 @@ function InputField({
   icon: Icon,
   label,
   error,
+  success,
+  hint,
   ...props
 }: {
   icon: React.ElementType;
   label: string;
   error?: boolean;
+  success?: boolean;
+  hint?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div>
@@ -55,13 +74,27 @@ function InputField({
         </div>
         <input
           {...props}
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={hint ? `${props.id}-hint` : undefined}
           className={`w-full rounded-xl border bg-white/50 py-3.5 pr-4 pl-11 text-sm ${
             error
               ? 'border-red-300 focus:border-red-400 focus:ring-red-200'
-              : 'border-stone-200 focus:border-rose-400 focus:ring-rose-200'
+              : success
+                ? 'border-emerald-300 focus:border-emerald-400 focus:ring-emerald-200'
+                : 'border-stone-200 focus:border-rose-400 focus:ring-rose-200'
           } transition-all placeholder:text-stone-400 focus:bg-white focus:ring-2 focus:outline-none`}
         />
+        {success && (
+          <div className="absolute top-1/2 right-4 -translate-y-1/2 text-emerald-500">
+            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+          </div>
+        )}
       </div>
+      {hint && (
+        <p id={`${props.id}-hint`} className="mt-1.5 text-xs text-stone-500">
+          {hint}
+        </p>
+      )}
     </div>
   );
 }
@@ -76,6 +109,14 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+
+  // Real-time email validation
+  const emailValidation = useMemo(() => {
+    if (!email || !emailTouched) return { error: false, success: false };
+    const valid = isValidEmail(email);
+    return { error: !valid, success: valid };
+  }, [email, emailTouched]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -149,8 +190,11 @@ function LoginForm() {
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => setEmailTouched(true)}
             placeholder="ten@email.com"
-            error={!!login.error}
+            error={!!login.error || emailValidation.error}
+            success={emailValidation.success && !login.error}
+            hint={emailValidation.error ? 'Vui lòng nhập email hợp lệ' : undefined}
           />
         </div>
 
@@ -179,6 +223,7 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
+              aria-invalid={login.error ? 'true' : undefined}
               className={`w-full rounded-xl border bg-white/50 py-3.5 pr-12 pl-11 text-sm ${
                 login.error
                   ? 'border-red-300 focus:border-red-400 focus:ring-red-200'

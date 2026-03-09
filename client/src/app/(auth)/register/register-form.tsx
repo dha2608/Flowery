@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Eye,
@@ -13,9 +13,20 @@ import {
   Phone,
   Sparkles,
   Check,
+  CheckCircle2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/use-auth';
+
+// ─── Validation helpers ───────────────────────────────────────────────────────
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPhone(phone: string): boolean {
+  return /^(\+84|0)(3|5|7|8|9)\d{8}$/.test(phone);
+}
 
 // ─── Google Icon ──────────────────────────────────────────────────────────────
 
@@ -119,6 +130,31 @@ export default function RegisterFormWrapper() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [clientError, setClientError] = useState<string | null>(null);
+
+  // Track which fields have been touched for real-time validation
+  const [touched, setTouched] = useState({
+    email: false,
+    phone: false,
+  });
+
+  // Real-time validation
+  const validation = useMemo(
+    () => ({
+      email: {
+        error: touched.email && email && !isValidEmail(email),
+        success: touched.email && email && isValidEmail(email),
+      },
+      phone: {
+        error: touched.phone && phone && !isValidPhone(phone),
+        success: touched.phone && phone && isValidPhone(phone),
+      },
+    }),
+    [email, phone, touched]
+  );
+
+  const handleBlur = (field: 'email' | 'phone') => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -245,10 +281,29 @@ export default function RegisterFormWrapper() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => handleBlur('email')}
               placeholder="ten@email.com"
-              className="w-full rounded-xl border border-stone-200 bg-white/50 py-3.5 pr-4 pl-11 text-sm transition-all placeholder:text-stone-400 focus:border-rose-400 focus:bg-white focus:ring-2 focus:ring-rose-200 focus:outline-none"
+              aria-invalid={validation.email.error ? 'true' : undefined}
+              aria-describedby={validation.email.error ? 'email-error' : undefined}
+              className={`w-full rounded-xl border bg-white/50 py-3.5 pr-4 pl-11 text-sm transition-all placeholder:text-stone-400 focus:bg-white focus:ring-2 focus:outline-none ${
+                validation.email.error
+                  ? 'border-red-300 focus:border-red-400 focus:ring-red-200'
+                  : validation.email.success
+                    ? 'border-emerald-300 focus:border-emerald-400 focus:ring-emerald-200'
+                    : 'border-stone-200 focus:border-rose-400 focus:ring-rose-200'
+              }`}
             />
+            {validation.email.success && (
+              <div className="absolute top-1/2 right-4 -translate-y-1/2 text-emerald-500">
+                <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+              </div>
+            )}
           </div>
+          {validation.email.error && (
+            <p id="email-error" className="mt-1.5 text-xs text-red-500" role="alert">
+              Vui lòng nhập email hợp lệ
+            </p>
+          )}
         </div>
 
         {/* Phone (optional) */}
@@ -267,10 +322,29 @@ export default function RegisterFormWrapper() {
               autoComplete="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              onBlur={() => handleBlur('phone')}
               placeholder="0912 345 678"
-              className="w-full rounded-xl border border-stone-200 bg-white/50 py-3.5 pr-4 pl-11 text-sm transition-all placeholder:text-stone-400 focus:border-rose-400 focus:bg-white focus:ring-2 focus:ring-rose-200 focus:outline-none"
+              aria-invalid={validation.phone.error ? 'true' : undefined}
+              aria-describedby={validation.phone.error ? 'phone-error' : undefined}
+              className={`w-full rounded-xl border bg-white/50 py-3.5 pr-4 pl-11 text-sm transition-all placeholder:text-stone-400 focus:bg-white focus:ring-2 focus:outline-none ${
+                validation.phone.error
+                  ? 'border-red-300 focus:border-red-400 focus:ring-red-200'
+                  : validation.phone.success
+                    ? 'border-emerald-300 focus:border-emerald-400 focus:ring-emerald-200'
+                    : 'border-stone-200 focus:border-rose-400 focus:ring-rose-200'
+              }`}
             />
+            {validation.phone.success && (
+              <div className="absolute top-1/2 right-4 -translate-y-1/2 text-emerald-500">
+                <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+              </div>
+            )}
           </div>
+          {validation.phone.error && (
+            <p id="phone-error" className="mt-1.5 text-xs text-red-500" role="alert">
+              Số điện thoại không hợp lệ (VD: 0912345678)
+            </p>
+          )}
         </div>
 
         {/* Password */}
