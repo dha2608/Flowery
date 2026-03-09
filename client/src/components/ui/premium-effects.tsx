@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -173,15 +173,33 @@ export function FloatingParticles({
   minSize = 14,
   maxSize = 28,
 }: FloatingParticlesProps) {
-  const items = Array.from({ length: count }, (_, i) => ({
-    id: i,
-    emoji: particles[i % particles.length],
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: minSize + Math.random() * (maxSize - minSize),
-    duration: 15 + Math.random() * 20,
-    delay: Math.random() * 5,
-  }));
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Use seeded positions to avoid hydration mismatch
+  const items = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => {
+        // Deterministic pseudo-random based on index (no Math.random)
+        const seed = (i + 1) * 2654435761;
+        const hash = (n: number) => ((n >>> 0) % 10000) / 10000;
+        return {
+          id: i,
+          emoji: particles[i % particles.length],
+          x: hash(seed) * 100,
+          y: hash(seed * 3) * 100,
+          size: minSize + hash(seed * 7) * (maxSize - minSize),
+          duration: 15 + hash(seed * 13) * 20,
+          delay: hash(seed * 17) * 5,
+        };
+      }),
+    [count, particles, minSize, maxSize]
+  );
+
+  if (!mounted) return null;
 
   return (
     <div className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}>
