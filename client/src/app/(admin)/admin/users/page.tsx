@@ -2,17 +2,16 @@
 
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
-import { Search, Trash2, UserCheck, UserX, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
-  Card,
-  CardContent,
-  Badge,
-  Button,
-  Input,
-  Spinner,
-  Modal,
-  Avatar,
-} from '@/components/ui';
+  Search,
+  Trash2,
+  UserCheck,
+  UserX,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+} from 'lucide-react';
+import { Card, CardContent, Badge, Button, Input, Spinner, Modal, Avatar } from '@/components/ui';
 import {
   useAdminUsers,
   useToggleUserStatus,
@@ -20,6 +19,7 @@ import {
   type AdminUser,
 } from '@/hooks/use-admin';
 import { formatDate, cn } from '@/lib/utils';
+import { exportUsers } from '@/lib/export-csv';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -55,7 +55,12 @@ export default function AdminUsersPage() {
   // Delete modal state
   const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
 
-  const { data: res, isLoading } = useAdminUsers({ page, limit: LIMIT, role: role || undefined, search: search || undefined });
+  const { data: res, isLoading } = useAdminUsers({
+    page,
+    limit: LIMIT,
+    role: role || undefined,
+    search: search || undefined,
+  });
   const users: AdminUser[] = (res?.data as AdminUser[] | undefined) ?? [];
   const pagination = res?.pagination;
 
@@ -101,6 +106,15 @@ export default function AdminUsersPage() {
               <Button size="sm" onClick={handleSearch} leftIcon={<Search className="h-4 w-4" />}>
                 Tìm
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportUsers(users)}
+                disabled={isLoading || users.length === 0}
+              >
+                <Download className="mr-1.5 h-4 w-4" />
+                Xuất CSV
+              </Button>
             </div>
 
             {/* Role tabs */}
@@ -113,7 +127,7 @@ export default function AdminUsersPage() {
                     'rounded-md px-3 py-1.5 text-sm font-medium transition-all',
                     role === tab.key
                       ? 'bg-white text-stone-900 shadow-sm'
-                      : 'text-stone-600 hover:text-stone-800',
+                      : 'text-stone-600 hover:text-stone-800'
                   )}
                 >
                   {tab.label}
@@ -148,18 +162,18 @@ export default function AdminUsersPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {users.map((user) => (
-                    <tr key={user._id} className="hover:bg-gray-50/50 transition-colors">
+                    <tr key={user._id} className="transition-colors hover:bg-gray-50/50">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <Avatar src={user.avatar?.url} name={user.name} size="sm" />
                           <div className="min-w-0">
                             <Link
                               href={`/admin/users/${user._id}`}
-                              className="font-medium text-stone-900 hover:text-stone-600 transition-colors truncate block"
+                              className="block truncate font-medium text-stone-900 transition-colors hover:text-stone-600"
                             >
                               {user.name}
                             </Link>
-                            <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                            <p className="truncate text-xs text-gray-400">{user.email}</p>
                           </div>
                         </div>
                       </td>
@@ -176,9 +190,7 @@ export default function AdminUsersPage() {
                           {user.isActive ? 'Hoạt động' : 'Vô hiệu'}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3 text-gray-500">
-                        {formatDate(user.createdAt)}
-                      </td>
+                      <td className="px-4 py-3 text-gray-500">{formatDate(user.createdAt)}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-2">
                           <Button
@@ -186,14 +198,13 @@ export default function AdminUsersPage() {
                             size="sm"
                             onClick={() => handleToggle(user)}
                             isLoading={
-                              toggleStatus.isPending &&
-                              toggleStatus.variables?.id === user._id
+                              toggleStatus.isPending && toggleStatus.variables?.id === user._id
                             }
                             title={user.isActive ? 'Vô hiệu hóa' : 'Kích hoạt'}
                             className={cn(
                               user.isActive
                                 ? 'text-amber-600 hover:bg-amber-50'
-                                : 'text-emerald-600 hover:bg-emerald-50',
+                                : 'text-emerald-600 hover:bg-emerald-50'
                             )}
                           >
                             {user.isActive ? (
@@ -262,18 +273,14 @@ export default function AdminUsersPage() {
         <div className="space-y-4">
           <p className="text-sm text-gray-600">
             Bạn có chắc muốn xóa người dùng{' '}
-            <span className="font-semibold text-gray-900">{deleteTarget?.name}</span>? Hành động
-            này không thể hoàn tác.
+            <span className="font-semibold text-gray-900">{deleteTarget?.name}</span>? Hành động này
+            không thể hoàn tác.
           </p>
           <div className="flex justify-end gap-3">
             <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
               Hủy
             </Button>
-            <Button
-              variant="danger"
-              onClick={handleDelete}
-              isLoading={deleteUser.isPending}
-            >
+            <Button variant="danger" onClick={handleDelete} isLoading={deleteUser.isPending}>
               Xóa
             </Button>
           </div>

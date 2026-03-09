@@ -12,6 +12,8 @@ import {
   ChevronLeft,
   ShieldCheck,
   Flower2,
+  ShoppingCart,
+  MessageSquare,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 import { Spinner } from '@/components/ui';
@@ -42,9 +44,19 @@ const NAV_ITEMS: NavItem[] = [
     icon: <Store className="h-4 w-4" />,
   },
   {
+    href: '/admin/orders',
+    label: 'Đơn hàng',
+    icon: <ShoppingCart className="h-4 w-4" />,
+  },
+  {
     href: '/admin/flowers',
     label: 'Hoa',
     icon: <Flower2 className="h-4 w-4" />,
+  },
+  {
+    href: '/admin/reviews',
+    label: 'Đánh giá',
+    icon: <MessageSquare className="h-4 w-4" />,
   },
   {
     href: '/admin/analytics',
@@ -73,21 +85,20 @@ function Sidebar({ pathname }: { pathname: string }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-20 flex w-64 flex-col bg-stone-900">
       {/* Brand */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-stone-700/50">
+      <div className="flex items-center gap-3 border-b border-stone-700/50 px-5 py-5">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-stone-700">
           <ShieldCheck className="h-4 w-4 text-stone-200" />
         </div>
         <div>
           <p className="text-sm font-bold text-white">Flowery</p>
-          <p className="text-xs text-stone-400 font-medium">Quản trị hệ thống</p>
+          <p className="text-xs font-medium text-stone-400">Quản trị hệ thống</p>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+      <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
         {NAV_ITEMS.map((item) => {
-          const isActive =
-            pathname === item.href || pathname.startsWith(item.href + '/');
+          const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
           return (
             <Link
               key={item.href}
@@ -96,7 +107,7 @@ function Sidebar({ pathname }: { pathname: string }) {
                 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
                 isActive
                   ? 'bg-stone-800 text-stone-100'
-                  : 'text-stone-400 hover:bg-stone-800 hover:text-stone-100',
+                  : 'text-stone-400 hover:bg-stone-800 hover:text-stone-100'
               )}
             >
               <span className={cn('shrink-0', isActive ? 'text-stone-200' : 'text-stone-500')}>
@@ -112,7 +123,7 @@ function Sidebar({ pathname }: { pathname: string }) {
       <div className="border-t border-stone-700/50 px-3 py-4">
         <Link
           href="/"
-          className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-stone-500 hover:bg-stone-800 hover:text-stone-300 transition-colors"
+          className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-stone-500 transition-colors hover:bg-stone-800 hover:text-stone-300"
         >
           <ChevronLeft className="h-4 w-4" />
           Quay lại trang chính
@@ -169,23 +180,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const pageTitle =
-    Object.entries(PAGE_TITLES).find(([key]) => pathname === key || pathname.startsWith(key + '/'))?.[1] ??
-    'Quản trị hệ thống';
+    Object.entries(PAGE_TITLES).find(
+      ([key]) => pathname === key || pathname.startsWith(key + '/')
+    )?.[1] ?? 'Quản trị hệ thống';
 
   return (
     <div className="flex min-h-screen bg-stone-50">
       <Sidebar pathname={pathname} />
 
       {/* Main area */}
-      <div className="ml-64 flex flex-1 flex-col min-h-screen">
+      <div className="ml-64 flex min-h-screen flex-1 flex-col">
         {/* Top bar */}
-        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-stone-200 bg-white/95 backdrop-blur-sm px-6 py-4">
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-stone-200 bg-white/95 px-6 py-4 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <div className="h-5 w-0.5 rounded-full bg-stone-400" />
             <h1 className="heading-sm">{pageTitle}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-1.5 border border-stone-200">
+            <div className="flex items-center gap-2 rounded-xl border border-stone-200 bg-stone-100 px-3 py-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-stone-500" />
               <span className="label-text text-stone-600">{user.name}</span>
             </div>

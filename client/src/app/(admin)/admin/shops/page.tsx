@@ -2,10 +2,20 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle, XCircle, Eye, ChevronLeft, ChevronRight, Star, MapPin } from 'lucide-react';
+import {
+  CheckCircle,
+  XCircle,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  MapPin,
+  Download,
+} from 'lucide-react';
 import { Card, CardContent, Badge, Button, Spinner, Modal, Textarea } from '@/components/ui';
 import { useAdminShops, useVerifyShop, useRejectShop, type AdminShop } from '@/hooks/use-admin';
 import { cn } from '@/lib/utils';
+import { exportShops } from '@/lib/export-csv';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -78,21 +88,34 @@ export default function AdminShopsPage() {
       {/* Status tabs */}
       <Card>
         <CardContent className="py-4">
-          <div className="flex w-fit gap-1 rounded-lg bg-stone-100 p-1">
-            {STATUS_TABS.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => handleStatusChange(tab.key)}
-                className={cn(
-                  'rounded-md px-4 py-1.5 text-sm font-medium transition-all',
-                  status === tab.key
-                    ? 'bg-white text-stone-900 shadow-sm'
-                    : 'text-stone-600 hover:text-stone-800'
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex w-fit gap-1 rounded-lg bg-stone-100 p-1">
+              {STATUS_TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => handleStatusChange(tab.key)}
+                  className={cn(
+                    'rounded-md px-4 py-1.5 text-sm font-medium transition-all',
+                    status === tab.key
+                      ? 'bg-white text-stone-900 shadow-sm'
+                      : 'text-stone-600 hover:text-stone-800'
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                exportShops(shops.map((s) => ({ ...s, isVerified: s.status === 'verified' })))
+              }
+              disabled={isLoading || shops.length === 0}
+            >
+              <Download className="mr-1.5 h-4 w-4" />
+              Xuất CSV
+            </Button>
           </div>
         </CardContent>
       </Card>

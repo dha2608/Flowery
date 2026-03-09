@@ -217,7 +217,7 @@ export function useAdminUsers(params: AdminUsersParams = {}) {
     queryKey: adminKeys.users(params),
     queryFn: () =>
       api.get<AdminUser[]>(
-        `/admin/users${buildQs({ page: params.page, limit: params.limit, role: params.role, search: params.search })}`,
+        `/admin/users${buildQs({ page: params.page, limit: params.limit, role: params.role, search: params.search })}`
       ),
   });
 }
@@ -237,7 +237,7 @@ export function useAdminShops(params: AdminShopsParams = {}) {
     queryKey: adminKeys.shops(params),
     queryFn: () =>
       api.get<AdminShop[]>(
-        `/admin/shops${buildQs({ page: params.page, limit: params.limit, status: params.status })}`,
+        `/admin/shops${buildQs({ page: params.page, limit: params.limit, status: params.status })}`
       ),
   });
 }
@@ -308,7 +308,7 @@ export function useAdminFlowers(params: AdminFlowersParams = {}) {
           color: params.color,
           season: params.season,
           isAvailable: params.isAvailable !== undefined ? String(params.isAvailable) : undefined,
-        })}`,
+        })}`
       ),
   });
 }
@@ -358,6 +358,137 @@ export function useDeleteFlower() {
     mutationFn: (id: string) => api.delete<unknown>(`/admin/flowers/${id}`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin', 'flowers'] });
+    },
+  });
+}
+
+// ─── Reviews ──────────────────────────────────────────────────────────────────
+
+export interface AdminReview {
+  _id: string;
+  user: { _id: string; name: string; avatar?: { url: string } };
+  product?: { _id: string; name: string };
+  shop?: { _id: string; name: string };
+  rating: number;
+  comment: string;
+  images?: { url: string }[];
+  isHidden: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface AdminReviewsParams {
+  page?: number;
+  limit?: number;
+  status?: string; // 'published' | 'hidden'
+  search?: string;
+}
+
+export function useAdminReviews(params: AdminReviewsParams = {}) {
+  return useQuery({
+    queryKey: ['admin', 'reviews', params],
+    queryFn: () =>
+      api.get<AdminReview[]>(
+        `/admin/reviews${buildQs({ page: params.page, limit: params.limit, status: params.status, search: params.search })}`
+      ),
+  });
+}
+
+export function useToggleReviewVisibility() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, isHidden }: { id: string; isHidden: boolean }) =>
+      api.put<AdminReview>(`/admin/reviews/${id}/visibility`, { isHidden }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'reviews'] });
+    },
+  });
+}
+
+export function useDeleteReview() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete<unknown>(`/admin/reviews/${id}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'reviews'] });
+    },
+  });
+}
+
+// ─── Orders ───────────────────────────────────────────────────────────────────
+
+export interface AdminOrderItem {
+  product: { _id: string; name: string };
+  flower?: { _id: string; name: { vi: string } };
+  quantity: number;
+  price: number;
+}
+
+export interface AdminOrder {
+  _id: string;
+  orderNumber: string;
+  user: { _id: string; name: string; email: string; phone?: string };
+  shop: { _id: string; name: string };
+  items: AdminOrderItem[];
+  totalAmount: number;
+  status: 'pending' | 'confirmed' | 'delivering' | 'delivered' | 'cancelled';
+  shippingAddress?: {
+    recipientName?: string;
+    phone?: string;
+    address?: string;
+    district?: string;
+    city?: string;
+  };
+  paymentMethod?: string;
+  note?: string;
+  cancelReason?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface AdminOrdersParams {
+  page?: number;
+  limit?: number;
+  status?: string;
+  search?: string;
+}
+
+export function useAdminOrders(params: AdminOrdersParams = {}) {
+  return useQuery({
+    queryKey: ['admin', 'orders', params],
+    queryFn: () =>
+      api.get<AdminOrder[]>(
+        `/admin/orders${buildQs({ page: params.page, limit: params.limit, status: params.status, search: params.search })}`
+      ),
+  });
+}
+
+export function useAdminOrder(id: string) {
+  return useQuery({
+    queryKey: ['admin', 'orders', id],
+    queryFn: () => api.get<AdminOrder>(`/admin/orders/${id}`),
+    enabled: !!id,
+  });
+}
+
+export function useAdminUpdateOrderStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      api.put<AdminOrder>(`/admin/orders/${id}/status`, { status }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'orders'] });
+    },
+  });
+}
+
+export function useCancelOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      api.put<AdminOrder>(`/admin/orders/${id}/cancel`, { cancelReason: reason }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'orders'] });
     },
   });
 }
