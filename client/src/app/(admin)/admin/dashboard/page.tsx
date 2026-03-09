@@ -189,7 +189,10 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-50">
                     {topShops.map((shop, i) => (
-                      <tr key={shop._id} className="transition-colors hover:bg-gray-50/50">
+                      <tr
+                        key={shop._id ?? `shop-${i}`}
+                        className="transition-colors hover:bg-gray-50/50"
+                      >
                         <td className="py-3">
                           <div className="flex items-center gap-2">
                             <span className="w-4 text-xs font-bold text-gray-400">{i + 1}</span>
@@ -232,9 +235,9 @@ export default function AdminDashboardPage() {
               <p className="py-6 text-center text-sm text-gray-400">Chưa có đơn hàng nào</p>
             ) : (
               <div className="space-y-3">
-                {recentOrders.map((order) => (
+                {recentOrders.map((order, i) => (
                   <div
-                    key={order._id}
+                    key={order._id ?? `order-${i}`}
                     className="flex items-center justify-between gap-3 rounded-lg border border-gray-100 p-3"
                   >
                     <div className="min-w-0 flex-1">
