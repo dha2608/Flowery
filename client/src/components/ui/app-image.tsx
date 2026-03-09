@@ -78,7 +78,9 @@ export function AppImage({
     <div
       className={cn(
         'animate-shimmer absolute inset-0 bg-stone-100',
-        'transition-opacity duration-300',
+        // Smooth 500ms fade-out with ease-out curve
+        'transition-opacity duration-500 ease-out',
+        'motion-reduce:transition-none',
         isLoading ? 'opacity-100' : 'pointer-events-none opacity-0'
       )}
       aria-hidden="true"
@@ -111,8 +113,10 @@ export function AppImage({
           alt={alt}
           className={cn(
             objectFitClass,
-            'transition-opacity duration-300',
-            isLoading ? 'opacity-0' : 'opacity-100',
+            // Professional image reveal: opacity + subtle scale
+            'transition-[opacity,transform] duration-500 ease-out',
+            'motion-reduce:transition-none',
+            isLoading ? 'scale-[1.02] opacity-0' : 'scale-100 opacity-100',
             className
           )}
           width={width}
@@ -138,8 +142,10 @@ export function AppImage({
         alt={alt}
         className={cn(
           objectFitClass,
-          'transition-opacity duration-300',
-          isLoading ? 'opacity-0' : 'opacity-100',
+          // Professional image reveal: opacity + subtle scale
+          'transition-[opacity,transform] duration-500 ease-out',
+          'motion-reduce:transition-none',
+          isLoading ? 'scale-[1.02] opacity-0' : 'scale-100 opacity-100',
           className
         )}
         fill

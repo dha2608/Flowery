@@ -214,7 +214,7 @@ export default function HomePage() {
                 <div className="absolute inset-8 rounded-3xl border border-white/80 bg-white/60 shadow-xl shadow-stone-200/50 backdrop-blur-sm" />
 
                 {/* Product card 1 */}
-                <div className="absolute top-6 right-8 z-10 rounded-2xl border border-stone-100 bg-white p-5 shadow-lg shadow-stone-200/40 transition-transform hover:-translate-y-1">
+                <div className="absolute top-6 right-8 z-10 rounded-2xl border border-stone-100 bg-white p-5 shadow-lg shadow-stone-200/40 transition-shadow duration-300 ease-out hover:shadow-xl hover:shadow-stone-200/50">
                   <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50">
                     <PetalAccent className="h-6 w-6 text-rose-400" />
                   </div>
@@ -224,7 +224,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Product card 2 */}
-                <div className="absolute bottom-16 left-4 z-10 rounded-2xl border border-stone-100 bg-white p-5 shadow-lg shadow-stone-200/40 transition-transform hover:-translate-y-1">
+                <div className="absolute bottom-16 left-4 z-10 rounded-2xl border border-stone-100 bg-white p-5 shadow-lg shadow-stone-200/40 transition-shadow duration-300 ease-out hover:shadow-xl hover:shadow-stone-200/50">
                   <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50">
                     <PetalAccent className="h-6 w-6 text-amber-400" />
                   </div>
@@ -269,7 +269,7 @@ export default function HomePage() {
               <StaggerItem key={emotion.key}>
                 <Link href={`/flowers?emotion=${emotion.key}`} className="block">
                   <div
-                    className={`group relative overflow-hidden rounded-2xl border ${emotion.border} bg-gradient-to-br ${emotion.bgFrom} ${emotion.bgTo} p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-stone-200/50`}
+                    className={`group relative overflow-hidden rounded-2xl border ${emotion.border} bg-gradient-to-br ${emotion.bgFrom} ${emotion.bgTo} p-6 transition-[box-shadow,border-color] duration-300 ease-out hover:shadow-lg hover:shadow-stone-200/50`}
                   >
                     {/* Icon */}
                     <div
@@ -317,7 +317,7 @@ export default function HomePage() {
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {features.map((feature, index) => (
               <ScrollReveal key={feature.title} delay={index * 0.15}>
-                <div className="group relative overflow-hidden rounded-2xl border border-stone-100 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-stone-200/40">
+                <div className="group relative overflow-hidden rounded-2xl border border-stone-100 bg-white p-8 transition-[box-shadow,border-color] duration-300 ease-out hover:border-stone-200 hover:shadow-lg hover:shadow-stone-200/40">
                   {/* Gradient icon */}
                   <div
                     className={`mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${feature.accent} shadow-sm`}

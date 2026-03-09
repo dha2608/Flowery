@@ -16,12 +16,11 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       ref={ref}
       className={cn(
         'rounded-xl border border-gray-100 bg-white shadow-sm',
-        'transition-all duration-300 ease-out',
-        hoverable && [
-          'hover:shadow-lg hover:shadow-gray-200/50',
-          'hover:-translate-y-1',
-          'hover:border-gray-200',
-        ],
+        // Professional transition: shadow + border only, no translate.
+        // Shadow depth change creates subtle lift illusion without jarring movement.
+        'transition-[box-shadow,border-color] duration-300 ease-out',
+        'motion-reduce:transition-none',
+        hoverable && ['hover:shadow-md hover:shadow-gray-200/60', 'hover:border-gray-200'],
         className
       )}
       {...props}

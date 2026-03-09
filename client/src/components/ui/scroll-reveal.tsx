@@ -1,39 +1,48 @@
 'use client';
 
-import { motion, useInView, Variants } from 'framer-motion';
-import { ReactNode, useRef } from 'react';
+import { motion, useInView, useReducedMotion, type Transition } from 'framer-motion';
+import { type ReactNode, useRef } from 'react';
+
+// ─── Professional easing & spring presets ──────────────────────────────────────
+// Spring physics feel more natural than cubic-bezier for UI entrances.
+// Damping controls overshoot, stiffness controls speed.
+
+const spring = {
+  /** Gentle entrance — cards, sections, general content */
+  gentle: { type: 'spring', damping: 30, stiffness: 200, mass: 0.8 } as const,
+  /** Snappy — buttons, badges, small elements */
+  snappy: { type: 'spring', damping: 25, stiffness: 400, mass: 0.5 } as const,
+  /** Smooth — large hero elements, page-level */
+  smooth: { type: 'spring', damping: 35, stiffness: 150, mass: 1 } as const,
+};
+
+// Duration-based fallback for reduced-motion users
+const reducedMotionTransition: Transition = { duration: 0, delay: 0 };
+
+// ─── ScrollReveal ──────────────────────────────────────────────────────────────
+
+type RevealVariant = 'fadeUp' | 'fadeIn' | 'scaleIn' | 'slideLeft' | 'slideRight';
 
 interface ScrollRevealProps {
   children: ReactNode;
   className?: string;
-  variant?: 'fadeUp' | 'fadeIn' | 'scaleIn' | 'slideLeft' | 'slideRight';
+  variant?: RevealVariant;
   delay?: number;
-  duration?: number;
   once?: boolean;
   threshold?: number;
+  /** Override spring preset */
+  springPreset?: keyof typeof spring;
 }
 
-const variants: Record<string, Variants> = {
-  fadeUp: {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 },
-  },
-  fadeIn: {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  },
-  scaleIn: {
-    hidden: { opacity: 0, scale: 0.85 },
-    visible: { opacity: 1, scale: 1 },
-  },
-  slideLeft: {
-    hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0 },
-  },
-  slideRight: {
-    hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0 },
-  },
+const revealOffsets: Record<
+  RevealVariant,
+  { opacity: number; y?: number; x?: number; scale?: number }
+> = {
+  fadeUp: { opacity: 0, y: 24 },
+  fadeIn: { opacity: 0 },
+  scaleIn: { opacity: 0, scale: 0.95 },
+  slideLeft: { opacity: 0, x: -32 },
+  slideRight: { opacity: 0, x: 32 },
 };
 
 export function ScrollReveal({
@@ -41,38 +50,36 @@ export function ScrollReveal({
   className,
   variant = 'fadeUp',
   delay = 0,
-  duration = 0.6,
   once = true,
-  threshold = 0.2,
+  threshold = 0.15,
+  springPreset = 'gentle',
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, {
-    once,
-    amount: threshold,
-  });
+  const isInView = useInView(ref, { once, amount: threshold });
+  const prefersReduced = useReducedMotion();
+
+  const hidden = revealOffsets[variant];
+  const visible = { opacity: 1, y: 0, x: 0, scale: 1 };
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      variants={variants[variant]}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
-      transition={{
-        duration,
-        delay,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
+      initial={prefersReduced ? visible : hidden}
+      animate={isInView ? visible : hidden}
+      transition={prefersReduced ? reducedMotionTransition : { ...spring[springPreset], delay }}
     >
       {children}
     </motion.div>
   );
 }
 
-// Staggered reveal for lists/grids
+// ─── StaggerReveal ─────────────────────────────────────────────────────────────
+
 interface StaggerRevealProps {
   children: ReactNode;
   className?: string;
+  /** Delay between each child (seconds) */
   staggerDelay?: number;
   once?: boolean;
 }
@@ -80,11 +87,12 @@ interface StaggerRevealProps {
 export function StaggerReveal({
   children,
   className,
-  staggerDelay = 0.1,
+  staggerDelay = 0.06,
   once = true,
 }: StaggerRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, amount: 0.1 });
+  const prefersReduced = useReducedMotion();
 
   return (
     <motion.div
@@ -96,7 +104,8 @@ export function StaggerReveal({
         hidden: {},
         visible: {
           transition: {
-            staggerChildren: staggerDelay,
+            staggerChildren: prefersReduced ? 0 : staggerDelay,
+            delayChildren: prefersReduced ? 0 : 0.05,
           },
         },
       }}
@@ -106,25 +115,18 @@ export function StaggerReveal({
   );
 }
 
-export function StaggerItem({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
+  const prefersReduced = useReducedMotion();
+
   return (
     <motion.div
       className={className}
       variants={{
-        hidden: { opacity: 0, y: 30 },
+        hidden: prefersReduced ? { opacity: 1 } : { opacity: 0, y: 16 },
         visible: {
           opacity: 1,
           y: 0,
-          transition: {
-            duration: 0.5,
-            ease: [0.25, 0.46, 0.45, 0.94],
-          },
+          transition: prefersReduced ? reducedMotionTransition : spring.gentle,
         },
       }}
     >

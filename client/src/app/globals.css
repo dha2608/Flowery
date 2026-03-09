@@ -155,17 +155,21 @@
     @apply mx-auto max-w-7xl;
   }
 
-  /* === Cards with depth === */
+  /* === Cards — shadow-based depth ===
+     Professional approach: shadow transitions only (no translateY).
+     Shadow depth creates the lift illusion naturally. */
   .card-base {
     @apply bg-surface-elevated border-border rounded-2xl border;
     box-shadow: var(--shadow-sm);
   }
 
   .card-hover {
-    @apply hover:border-border-strong transition-all duration-300 ease-out;
+    transition:
+      box-shadow 300ms ease-out,
+      border-color 300ms ease-out;
     &:hover {
       box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
+      border-color: var(--color-border-strong);
     }
   }
 
@@ -182,47 +186,62 @@
     box-shadow: var(--shadow-sm);
   }
 
-  /* === Buttons with polish === */
+  /* === Buttons — professional transitions ===
+     Shadow-only depth changes (no translateY bouncing).
+     200ms ease-out for instant perceived response. */
   .btn-primary {
-    @apply bg-primary-600 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white transition-all duration-200;
+    @apply bg-primary-600 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white;
+    transition:
+      background-color 200ms ease-out,
+      box-shadow 200ms ease-out;
     box-shadow:
-      0 1px 2px rgba(212, 42, 85, 0.2),
-      0 2px 8px rgba(212, 42, 85, 0.15);
+      0 1px 2px rgba(212, 42, 85, 0.15),
+      0 2px 8px rgba(212, 42, 85, 0.1);
     &:hover {
       @apply bg-primary-700;
       box-shadow:
-        0 2px 4px rgba(212, 42, 85, 0.25),
-        0 4px 16px rgba(212, 42, 85, 0.2);
-      transform: translateY(-1px);
+        0 2px 4px rgba(212, 42, 85, 0.2),
+        0 4px 16px rgba(212, 42, 85, 0.15);
     }
     &:active {
       @apply bg-primary-800;
-      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(212, 42, 85, 0.15);
     }
   }
 
   .btn-secondary {
-    @apply bg-surface-elevated text-text-primary border-border inline-flex items-center justify-center rounded-xl border px-6 py-3 text-sm font-semibold transition-all duration-200;
+    @apply bg-surface-elevated text-text-primary inline-flex items-center justify-center rounded-xl border px-6 py-3 text-sm font-semibold;
+    border-color: var(--color-border);
+    transition:
+      background-color 200ms ease-out,
+      border-color 200ms ease-out,
+      box-shadow 200ms ease-out;
     box-shadow: var(--shadow-sm);
     &:hover {
-      @apply border-border-strong bg-surface;
+      @apply bg-surface;
+      border-color: var(--color-border-strong);
       box-shadow: var(--shadow-md);
-      transform: translateY(-1px);
     }
     &:active {
-      transform: translateY(0);
+      box-shadow: var(--shadow-sm);
     }
   }
 
   .btn-ghost {
-    @apply text-text-secondary inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-medium transition-all duration-200;
+    @apply text-text-secondary inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-medium;
+    transition:
+      background-color 200ms ease-out,
+      color 200ms ease-out;
     &:hover {
       @apply bg-surface-secondary text-text-primary;
     }
   }
 
   .btn-accent {
-    @apply bg-secondary-500 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white transition-all duration-200;
+    @apply bg-secondary-500 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white;
+    transition:
+      background-color 200ms ease-out,
+      box-shadow 200ms ease-out;
     box-shadow:
       0 1px 2px rgba(237, 161, 22, 0.2),
       0 2px 8px rgba(237, 161, 22, 0.15);
@@ -231,7 +250,6 @@
       box-shadow:
         0 2px 4px rgba(237, 161, 22, 0.25),
         0 4px 16px rgba(237, 161, 22, 0.2);
-      transform: translateY(-1px);
     }
   }
 
@@ -377,11 +395,17 @@
   }
 }
 
-/* === Smooth scroll-linked animations === */
+/* === Smooth animations ═══════════════════════════════════════════════════════
+   Professional easing curves:
+   - ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1)  — standard decelerate
+   - ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1)    — fast start, gentle land
+   - ease-in-out-smooth: cubic-bezier(0.45, 0, 0.55, 1)  — symmetric S-curve
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
   50% {
     transform: translateY(-6px);
@@ -408,27 +432,6 @@
   }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-primary-100) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-.animate-fade-up {
-  animation: fade-up 0.5s ease-out forwards;
-}
-
-/* ─── Premium Animations ───────────────────────────────────────────────────── */
-
 @keyframes gradient-x {
   0%,
   100% {
@@ -446,8 +449,8 @@
     transform: scale(1);
   }
   50% {
-    opacity: 0.7;
-    transform: scale(1.05);
+    opacity: 0.6;
+    transform: scale(1.02);
   }
 }
 
@@ -457,7 +460,7 @@
     transform: translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateY(-15px) rotate(5deg);
+    transform: translateY(-8px) rotate(3deg);
   }
 }
 
@@ -470,20 +473,81 @@
   }
 }
 
+@keyframes subtle-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Animation utility classes */
+.animate-float {
+  animation: float 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-primary-100) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .animate-gradient-x {
-  animation: gradient-x 3s ease infinite;
+  animation: gradient-x 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 .animate-glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
+  animation: glow-pulse 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 .animate-float-rotate {
-  animation: float-rotate 4s ease-in-out infinite;
+  animation: float-rotate 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 .animate-border-spin {
-  animation: border-spin 4s linear infinite;
+  animation: border-spin 6s linear infinite;
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ═══ Reduced Motion ═══════════════════════════════════════════════════════════
+   Respect user preference: disable all animations and transitions.
+   Framer Motion handles its own via useReducedMotion().
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-float,
+  .animate-shimmer,
+  .animate-fade-up,
+  .animate-gradient-x,
+  .animate-glow-pulse,
+  .animate-float-rotate,
+  .animate-border-spin,
+  .animate-subtle-pulse {
+    animation: none !important;
+  }
 }
 
 /* ─── Dark Theme ───────────────────────────────────────────────────────────── */

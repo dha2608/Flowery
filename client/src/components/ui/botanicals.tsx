@@ -239,7 +239,7 @@ export function WarmCard({
         'group relative overflow-hidden rounded-2xl border border-stone-100 bg-white p-6',
         'shadow-sm',
         hoverEffect &&
-          'transition-all duration-300 hover:-translate-y-1 hover:border-stone-200 hover:shadow-md',
+          'transition-[box-shadow,border-color] duration-300 ease-out hover:border-stone-200 hover:shadow-md',
         className
       )}
     >
