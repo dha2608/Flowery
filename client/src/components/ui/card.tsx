@@ -15,13 +15,18 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        'rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow',
-        hoverable && 'hover:shadow-md',
-        className,
+        'rounded-xl border border-gray-100 bg-white shadow-sm',
+        'transition-all duration-300 ease-out',
+        hoverable && [
+          'hover:shadow-lg hover:shadow-gray-200/50',
+          'hover:-translate-y-1',
+          'hover:border-gray-200',
+        ],
+        className
       )}
       {...props}
     />
-  ),
+  )
 );
 Card.displayName = 'Card';
 
@@ -34,7 +39,7 @@ interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {}
 const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex flex-col gap-1.5 px-6 py-5 border-b border-gray-100', className)}
+    className={cn('flex flex-col gap-1.5 border-b border-gray-100 px-6 py-5', className)}
     {...props}
   />
 ));
@@ -46,15 +51,13 @@ CardHeader.displayName = 'CardHeader';
 
 interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {}
 
-const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ className, ...props }, ref) => (
-    <h3
-      ref={ref}
-      className={cn('text-base font-semibold leading-tight text-gray-900', className)}
-      {...props}
-    />
-  ),
-);
+const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn('text-base leading-tight font-semibold text-gray-900', className)}
+    {...props}
+  />
+));
 CardTitle.displayName = 'CardTitle';
 
 // ---------------------------------------------------------------------------
@@ -66,7 +69,7 @@ interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {}
 const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
   ({ className, ...props }, ref) => (
     <p ref={ref} className={cn('text-sm text-gray-500', className)} {...props} />
-  ),
+  )
 );
 CardDescription.displayName = 'CardDescription';
 
@@ -76,11 +79,9 @@ CardDescription.displayName = 'CardDescription';
 
 interface CardContentProps extends HTMLAttributes<HTMLDivElement> {}
 
-const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('px-6 py-5', className)} {...props} />
-  ),
-);
+const CardContent = forwardRef<HTMLDivElement, CardContentProps>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn('px-6 py-5', className)} {...props} />
+));
 CardContent.displayName = 'CardContent';
 
 // ---------------------------------------------------------------------------
@@ -93,8 +94,8 @@ const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(({ className, ...
   <div
     ref={ref}
     className={cn(
-      'flex items-center gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-xl',
-      className,
+      'flex items-center gap-3 rounded-b-xl border-t border-gray-100 bg-gray-50/50 px-6 py-4',
+      className
     )}
     {...props}
   />
