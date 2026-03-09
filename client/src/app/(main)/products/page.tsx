@@ -24,6 +24,7 @@ import {
 } from '@/hooks/use-products';
 import { cn } from '@/lib/utils';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import { PetalAccent } from '@/components/ui/botanicals';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -286,14 +287,22 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <Container className="py-8">
+    <div className="relative min-h-screen bg-stone-50">
+      <Container className="relative py-8">
         <Breadcrumbs items={[{ label: 'Sản phẩm hoa' }]} className="mb-6" />
 
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-stone-900 md:text-3xl">Sản phẩm hoa</h1>
-          <p className="mt-1 text-stone-500">Khám phá các mẫu hoa đẹp từ các shop uy tín</p>
+        <div className="mb-8">
+          <div className="mb-2 flex items-center gap-2">
+            <PetalAccent className="text-primary-400 h-5 w-5" />
+            <span className="text-primary-500 text-xs font-semibold tracking-[0.15em] uppercase">
+              Cửa hàng
+            </span>
+          </div>
+          <h1 className="font-serif text-3xl font-bold text-stone-900 md:text-4xl">Sản phẩm hoa</h1>
+          <p className="mt-2 max-w-md text-stone-500">
+            Khám phá các mẫu hoa đẹp từ các shop uy tín trên Flowery
+          </p>
         </div>
 
         {/* Toolbar */}

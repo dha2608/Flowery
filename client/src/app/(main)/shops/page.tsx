@@ -21,6 +21,7 @@ import { Button } from '@/components/ui';
 import { useShops, type Shop } from '@/hooks/use-shops';
 import { cn } from '@/lib/utils';
 import { AppImage } from '@/components/ui/app-image';
+import { PetalAccent } from '@/components/ui/botanicals';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -336,10 +337,14 @@ export default function ShopsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="mb-2">
-            <h1 className="text-3xl font-bold text-stone-900 md:text-4xl">Cửa hàng Hoa</h1>
+          <div className="mb-2 flex items-center gap-2">
+            <PetalAccent className="text-primary-400 h-5 w-5" />
+            <span className="text-primary-500 text-xs font-semibold tracking-[0.15em] uppercase">
+              Đối tác
+            </span>
           </div>
-          <p className="text-lg text-stone-600">Tìm cửa hàng hoa uy tín gần bạn</p>
+          <h1 className="font-serif text-3xl font-bold text-stone-900 md:text-4xl">Cửa hàng hoa</h1>
+          <p className="mt-2 text-lg text-stone-500">Tìm cửa hàng hoa uy tín gần bạn</p>
         </motion.div>
 
         {/* Toolbar */}

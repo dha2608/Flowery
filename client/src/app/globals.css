@@ -109,6 +109,10 @@
     text-wrap: balance;
   }
 
+  .bg-gradient-radial {
+    background-image: radial-gradient(var(--tw-gradient-stops));
+  }
+
   /* === Typography === */
   .heading-xl {
     @apply text-text-primary font-serif text-4xl leading-[1.1] font-bold tracking-tight md:text-5xl lg:text-6xl;

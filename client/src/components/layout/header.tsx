@@ -9,6 +9,7 @@ import { useAuthStore } from '@/lib/store';
 import { useCartStore } from '@/lib/cart-store';
 import { SearchOverlay } from './search-overlay';
 import { AppImage } from '@/components/ui/app-image';
+import { RoseIcon } from '@/components/ui/botanicals';
 
 const navLinks = [
   { href: '/', label: 'Trang chủ' },
@@ -104,8 +105,11 @@ export function Header() {
             {/* Logo */}
             <Link
               href="/"
-              className="hover:text-primary-600 shrink-0 font-serif text-xl font-semibold text-stone-900 transition-colors"
+              className="hover:text-primary-600 flex shrink-0 items-center gap-2 font-serif text-xl font-semibold text-stone-900 transition-colors"
             >
+              <div className="bg-primary-600 shadow-primary-500/20 flex h-8 w-8 items-center justify-center rounded-xl shadow-sm">
+                <RoseIcon className="h-4 w-4 text-white" />
+              </div>
               <span className="inline-block">Flowery</span>
             </Link>
 
@@ -379,8 +383,11 @@ export function Header() {
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="font-serif text-lg font-semibold text-stone-900"
+            className="flex items-center gap-2 font-serif text-lg font-semibold text-stone-900"
           >
+            <div className="bg-primary-600 flex h-7 w-7 items-center justify-center rounded-lg">
+              <RoseIcon className="h-3.5 w-3.5 text-white" />
+            </div>
             Flowery
           </Link>
           <motion.button

@@ -19,6 +19,7 @@ import { formatPrice, formatDateTime } from '@/lib/utils';
 import { Badge, Card, CardContent, Spinner } from '@/components/ui';
 import { Container } from '@/components/layout';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import { PetalAccent } from '@/components/ui/botanicals';
 import { cn } from '@/lib/utils';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -102,7 +103,13 @@ export default function OrdersPage() {
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="font-serif text-2xl font-bold text-stone-900">Đơn hàng của tôi</h1>
+        <div className="mb-2 flex items-center gap-2">
+          <PetalAccent className="text-primary-400 h-5 w-5" />
+          <span className="text-primary-500 text-xs font-semibold tracking-[0.15em] uppercase">
+            Tài khoản
+          </span>
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-stone-900">Đơn hàng của tôi</h1>
       </div>
 
       {/* Filter tabs — underline style */}
