@@ -44,6 +44,48 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 // ---------------------------------------------------------------------------
+// Hook – focus trap
+// ---------------------------------------------------------------------------
+
+function useFocusTrap(containerRef: React.RefObject<HTMLElement | null>, isActive: boolean) {
+  useEffect(() => {
+    if (!isActive || !containerRef.current) return;
+
+    const container = containerRef.current;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = container.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        // Shift + Tab
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        // Tab
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [containerRef, isActive]);
+}
+
+// ---------------------------------------------------------------------------
 // SearchOverlay
 // ---------------------------------------------------------------------------
 
@@ -55,10 +97,14 @@ interface SearchOverlayProps {
 export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResults>({ flowers: [], shops: [] });
   const [loading, setLoading] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
+
+  // Enable focus trap when overlay is open
+  useFocusTrap(panelRef, isOpen);
 
   // Autofocus when opened
   useEffect(() => {
@@ -150,6 +196,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
       {/* Panel */}
       <div
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label="Tìm kiếm"
@@ -259,11 +306,13 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                           className="group flex items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-gray-50"
                         >
                           {primaryImg?.url ? (
-                            <AppImage
-                              src={primaryImg.url}
-                              alt={flower.name.vi}
-                              className="h-10 w-10 shrink-0 rounded-lg border border-gray-100 object-cover"
-                            />
+                            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-gray-100">
+                              <AppImage
+                                src={primaryImg.url}
+                                alt={flower.name.vi}
+                                className="object-cover"
+                              />
+                            </div>
                           ) : (
                             <span className="bg-primary-50 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
                               <Flower2 className="text-primary-400 h-4 w-4" />
@@ -298,11 +347,13 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         className="group flex items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-gray-50"
                       >
                         {shop.logo?.url ? (
-                          <AppImage
-                            src={shop.logo.url}
-                            alt={shop.name}
-                            className="h-10 w-10 shrink-0 rounded-lg border border-gray-100 object-cover"
-                          />
+                          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-gray-100">
+                            <AppImage
+                              src={shop.logo.url}
+                              alt={shop.name}
+                              className="object-cover"
+                            />
+                          </div>
                         ) : (
                           <span className="bg-accent-50 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
                             <Store className="text-accent-400 h-4 w-4" />
