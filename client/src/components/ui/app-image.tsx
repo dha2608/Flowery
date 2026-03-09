@@ -45,7 +45,7 @@ export function AppImage({
   src,
   alt = '',
   className,
-  containerClassName: _containerClassName,
+  containerClassName,
   width,
   height,
   fill = true,
@@ -129,9 +129,9 @@ export function AppImage({
   }
 
   // Fill mode - image fills its container
-  // Container must have position:relative and defined dimensions
+  // Wrapper ensures position:relative so Next.js Image fill works correctly
   return (
-    <>
+    <div className={cn('relative h-full w-full', containerClassName)}>
       {showPlaceholder && <ShimmerPlaceholder />}
       <Image
         src={src}
@@ -151,6 +151,6 @@ export function AppImage({
         loading={priority ? undefined : 'lazy'}
         unoptimized={unoptimized}
       />
-    </>
+    </div>
   );
 }
