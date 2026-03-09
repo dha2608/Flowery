@@ -106,7 +106,7 @@ export function Header() {
               href="/"
               className="hover:text-primary-600 shrink-0 font-serif text-xl font-semibold text-stone-900 transition-colors"
             >
-              <span className="inline-block">🌸 Flowery</span>
+              <span className="inline-block">Flowery</span>
             </Link>
 
             {/* Desktop navigation */}
@@ -205,7 +205,7 @@ export function Header() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className="from-primary-500 to-primary-600 shadow-primary-500/30 absolute -top-0.5 -right-0.5 flex h-[1.1rem] min-w-[1.1rem] items-center justify-center rounded-full bg-gradient-to-r px-0.5 text-[10px] leading-none font-semibold text-white shadow-lg"
+                      className="bg-primary-500 absolute -top-0.5 -right-0.5 flex h-[1.1rem] min-w-[1.1rem] items-center justify-center rounded-full px-0.5 text-[10px] leading-none font-semibold text-white"
                     >
                       {cartCount > 99 ? '99+' : cartCount}
                     </motion.span>
@@ -227,7 +227,7 @@ export function Header() {
                         <AppImage src={user.avatar.url} alt={user.name} className="object-cover" />
                       </div>
                     ) : (
-                      <span className="from-primary-400 to-primary-600 shadow-primary-500/30 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br text-sm font-semibold text-white shadow-lg select-none">
+                      <span className="bg-primary-500 flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold text-white select-none">
                         {avatarFallback}
                       </span>
                     )}
@@ -259,7 +259,7 @@ export function Header() {
                         className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-stone-200/50 bg-white/90 py-2 shadow-xl backdrop-blur-xl"
                       >
                         {/* User info */}
-                        <div className="from-primary-50/50 border-b border-stone-100 bg-gradient-to-r to-transparent px-4 py-3">
+                        <div className="border-b border-stone-100 bg-stone-50 px-4 py-3">
                           <p className="truncate text-sm font-medium text-stone-900">{user.name}</p>
                           <p className="mt-0.5 truncate text-xs text-stone-500">{user.email}</p>
                         </div>
@@ -270,7 +270,6 @@ export function Header() {
                             className="text-primary-600 hover:bg-primary-50/50 flex items-center px-4 py-2.5 text-sm font-medium transition-colors"
                             onClick={() => setDropdownOpen(false)}
                           >
-                            <span className="mr-2">🏪</span>
                             Quản lý shop
                           </Link>
                         )}
@@ -280,7 +279,6 @@ export function Header() {
                             className="flex items-center px-4 py-2.5 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
                             onClick={() => setDropdownOpen(false)}
                           >
-                            <span className="mr-2">⚙️</span>
                             Admin
                           </Link>
                         )}
@@ -321,7 +319,7 @@ export function Header() {
                   </Link>
                   <Link
                     href="/register"
-                    className="from-primary-500 to-primary-600 hover:shadow-primary-500/25 rounded-full bg-gradient-to-r px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:shadow-lg hover:brightness-105"
+                    className="bg-primary-600 hover:bg-primary-700 rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-colors"
                   >
                     Đăng ký
                   </Link>
@@ -377,13 +375,13 @@ export function Header() {
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
         {/* Drawer header */}
-        <div className="from-primary-50/30 flex h-16 shrink-0 items-center justify-between border-b border-stone-200/50 bg-gradient-to-r to-transparent px-5">
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-stone-200 bg-stone-50 px-5">
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
             className="font-serif text-lg font-semibold text-stone-900"
           >
-            🌸 Flowery
+            Flowery
           </Link>
           <motion.button
             onClick={() => setMobileOpen(false)}
@@ -433,10 +431,26 @@ export function Header() {
               href="/cart"
               className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-stone-600 transition-colors hover:bg-stone-50 hover:text-stone-900"
             >
-              <span className="text-lg">🛒</span>
+              <span className="text-lg text-stone-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="8" cy="21" r="1" />
+                  <circle cx="19" cy="21" r="1" />
+                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                </svg>
+              </span>
               Giỏ hàng
               {cartCount > 0 && (
-                <span className="from-primary-500 to-primary-600 ml-auto flex h-5 min-w-[1.3rem] items-center justify-center rounded-full bg-gradient-to-r px-1 text-[10px] font-semibold text-white">
+                <span className="bg-primary-500 ml-auto flex h-5 min-w-[1.3rem] items-center justify-center rounded-full px-1 text-[10px] font-semibold text-white">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
@@ -446,7 +460,22 @@ export function Header() {
                 href="/notifications"
                 className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-stone-600 transition-colors hover:bg-stone-50 hover:text-stone-900"
               >
-                <span className="text-lg">🔔</span>
+                <span className="text-lg text-stone-400">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                  </svg>
+                </span>
                 Thông báo
               </Link>
             )}
@@ -457,13 +486,13 @@ export function Header() {
             {isAuthenticated && user ? (
               <>
                 {/* User identity */}
-                <div className="from-primary-50/50 mb-2 flex items-center gap-3 rounded-xl bg-gradient-to-r to-transparent px-4 py-3">
+                <div className="mb-2 flex items-center gap-3 rounded-xl bg-stone-50 px-4 py-3">
                   {user.avatar?.url ? (
                     <div className="ring-primary-100 relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2">
                       <AppImage src={user.avatar.url} alt={user.name} className="object-cover" />
                     </div>
                   ) : (
-                    <span className="from-primary-400 to-primary-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-sm font-semibold text-white">
+                    <span className="bg-primary-500 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white">
                       {avatarFallback}
                     </span>
                   )}
@@ -479,7 +508,6 @@ export function Header() {
                     href="/shop/dashboard"
                     className="text-primary-600 hover:bg-primary-50/50 flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors"
                   >
-                    <span>🏪</span>
                     Quản lý shop
                   </Link>
                 )}
@@ -488,7 +516,6 @@ export function Header() {
                     href="/admin/dashboard"
                     className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
                   >
-                    <span>⚙️</span>
                     Admin
                   </Link>
                 )}
@@ -525,7 +552,7 @@ export function Header() {
                 </Link>
                 <Link
                   href="/register"
-                  className="from-primary-500 to-primary-600 hover:shadow-primary-500/30 block rounded-xl bg-gradient-to-r px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:shadow-lg"
+                  className="bg-primary-600 hover:bg-primary-700 block rounded-xl px-4 py-3 text-center text-sm font-semibold text-white transition-colors"
                 >
                   Đăng ký
                 </Link>

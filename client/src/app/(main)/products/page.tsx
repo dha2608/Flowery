@@ -2,18 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   AlertCircle,
   ChevronDown,
-  Gift,
   Heart,
   Inbox,
   Package,
   Search,
   SlidersHorizontal,
-  Sparkles,
-  Tag,
   X,
 } from 'lucide-react';
 import { Container } from '@/components/layout';
@@ -32,36 +28,36 @@ import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CATEGORIES = [
-  { value: '', label: 'Tất cả', icon: '🌸' },
-  { value: 'single_flower', label: 'Hoa đơn', icon: '🌷' },
-  { value: 'bouquet', label: 'Bó hoa', icon: '💐' },
-  { value: 'arrangement', label: 'Cắm hoa', icon: '🏺' },
-  { value: 'basket', label: 'Giỏ hoa', icon: '🧺' },
-  { value: 'box', label: 'Hộp hoa', icon: '🎁' },
-  { value: 'subscription_pack', label: 'Gói đăng ký', icon: '📦' },
-  { value: 'custom', label: 'Tuỳ chỉnh', icon: '✨' },
+  { value: '', label: 'Tất cả' },
+  { value: 'single_flower', label: 'Hoa đơn' },
+  { value: 'bouquet', label: 'Bó hoa' },
+  { value: 'arrangement', label: 'Cắm hoa' },
+  { value: 'basket', label: 'Giỏ hoa' },
+  { value: 'box', label: 'Hộp hoa' },
+  { value: 'subscription_pack', label: 'Gói đăng ký' },
+  { value: 'custom', label: 'Tuỳ chỉnh' },
 ];
 
 const OCCASIONS = [
-  { value: '', label: 'Tất cả dịp', icon: '🎯' },
-  { value: 'birthday', label: 'Sinh nhật', icon: '🎂' },
-  { value: 'anniversary', label: 'Kỷ niệm', icon: '💑' },
-  { value: 'wedding', label: 'Đám cưới', icon: '💒' },
-  { value: 'graduation', label: 'Tốt nghiệp', icon: '🎓' },
-  { value: 'valentines', label: 'Valentine', icon: '💝' },
-  { value: 'mothers_day', label: 'Ngày của mẹ', icon: '👩' },
-  { value: 'womens_day', label: 'Ngày phụ nữ', icon: '👠' },
-  { value: 'teachers_day', label: 'Ngày nhà giáo', icon: '📚' },
-  { value: 'congratulations', label: 'Chúc mừng', icon: '🎉' },
+  { value: '', label: 'Tất cả dịp' },
+  { value: 'birthday', label: 'Sinh nhật' },
+  { value: 'anniversary', label: 'Kỷ niệm' },
+  { value: 'wedding', label: 'Đám cưới' },
+  { value: 'graduation', label: 'Tốt nghiệp' },
+  { value: 'valentines', label: 'Valentine' },
+  { value: 'mothers_day', label: 'Ngày của mẹ' },
+  { value: 'womens_day', label: 'Ngày phụ nữ' },
+  { value: 'teachers_day', label: 'Ngày nhà giáo' },
+  { value: 'congratulations', label: 'Chúc mừng' },
 ];
 
 const PRICE_RANGES = [
-  { min: undefined, max: undefined, label: 'Tất cả giá', color: 'stone' },
-  { min: 0, max: 200000, label: 'Dưới 200K', color: 'emerald' },
-  { min: 200000, max: 500000, label: '200K - 500K', color: 'blue' },
-  { min: 500000, max: 1000000, label: '500K - 1 triệu', color: 'violet' },
-  { min: 1000000, max: 2000000, label: '1 - 2 triệu', color: 'amber' },
-  { min: 2000000, max: undefined, label: 'Trên 2 triệu', color: 'rose' },
+  { min: undefined, max: undefined, label: 'Tất cả giá' },
+  { min: 0, max: 200000, label: 'Dưới 200K' },
+  { min: 200000, max: 500000, label: '200K - 500K' },
+  { min: 500000, max: 1000000, label: '500K - 1 triệu' },
+  { min: 1000000, max: 2000000, label: '1 - 2 triệu' },
+  { min: 2000000, max: undefined, label: 'Trên 2 triệu' },
 ];
 
 const SORT_OPTIONS: { value: string; label: string; sort: ProductSortBy; order: SortOrder }[] = [
@@ -70,26 +66,6 @@ const SORT_OPTIONS: { value: string; label: string; sort: ProductSortBy; order: 
   { value: 'price-asc', label: 'Giá thấp → cao', sort: 'price', order: 'asc' },
   { value: 'price-desc', label: 'Giá cao → thấp', sort: 'price', order: 'desc' },
 ];
-
-// ─── Animation Variants ───────────────────────────────────────────────────────
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05 },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: 'spring' as const, stiffness: 300, damping: 24 },
-  },
-};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -105,12 +81,7 @@ function formatPrice(price: number): string {
 
 function FilterTag({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <motion.span
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      className="from-primary-50 text-primary-700 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r to-pink-50 px-3 py-1.5 text-sm font-medium shadow-sm"
-    >
+    <span className="bg-primary-50 text-primary-700 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium">
       {label}
       <button
         onClick={onRemove}
@@ -118,11 +89,11 @@ function FilterTag({ label, onRemove }: { label: string; onRemove: () => void })
       >
         <X className="h-3.5 w-3.5" />
       </button>
-    </motion.span>
+    </span>
   );
 }
 
-function ProductCard({ product, index }: { product: Product; index: number }) {
+function ProductCard({ product }: { product: Product }) {
   const imageUrl = getProductImageUrl(product.images);
   const hasDiscount = product.salePrice && product.salePrice < product.price;
   const discountPercent = hasDiscount
@@ -130,107 +101,73 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
     : 0;
 
   return (
-    <motion.div variants={cardVariants} custom={index}>
-      <Link href={`/products/${product.slug}`} className="group block">
-        <motion.div
-          className="glass overflow-hidden rounded-2xl"
-          whileHover={{ y: -4 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-        >
-          {/* Image Container */}
-          <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-stone-50 to-stone-100">
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+    <Link href={`/products/${product.slug}`} className="group block">
+      <div className="overflow-hidden rounded-xl border border-stone-200 bg-white transition-shadow hover:shadow-md">
+        {/* Image */}
+        <div className="relative aspect-square overflow-hidden bg-stone-100">
+          {imageUrl ? (
+            <AppImage
+              src={imageUrl}
+              alt={product.name}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <Package className="h-12 w-12 text-stone-300" />
+            </div>
+          )}
 
-            {imageUrl ? (
-              <AppImage
-                src={imageUrl}
-                alt={product.name}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <Package className="h-16 w-16 text-stone-200" />
-              </div>
-            )}
+          {hasDiscount && (
+            <div className="absolute top-2 left-2 rounded-md bg-red-500 px-2 py-1 text-xs font-semibold text-white">
+              -{discountPercent}%
+            </div>
+          )}
 
-            {/* Discount badge */}
-            {hasDiscount && (
-              <div className="absolute top-3 left-0 rounded-r-full bg-gradient-to-r from-red-500 to-rose-500 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
-                -{discountPercent}%
-              </div>
-            )}
+          <button
+            className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 opacity-0 shadow-sm transition-opacity group-hover:opacity-100"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <Heart className="h-4 w-4 text-stone-500" />
+          </button>
 
-            {/* Wishlist button */}
-            <button
-              className="glass-button absolute top-3 right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full opacity-0 transition-all duration-200 group-hover:opacity-100 hover:scale-105 active:scale-95"
-              onClick={(e) => {
-                e.preventDefault();
-                // TODO: Add to wishlist
-              }}
-            >
-              <Heart className="h-4 w-4 text-rose-500" />
-            </button>
-
-            {/* Quick add button */}
-            <div className="absolute right-3 bottom-3 left-3 z-20 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-              <span className="glass-button block rounded-xl px-4 py-2 text-center text-sm font-medium text-white">
-                Xem chi tiết →
+          {!product.isAvailable && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <span className="rounded-full bg-white px-3 py-1.5 text-sm font-medium text-stone-700">
+                Hết hàng
               </span>
             </div>
+          )}
+        </div>
 
-            {/* Out of stock overlay */}
-            {!product.isAvailable && (
-              <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                <span className="glass rounded-full px-4 py-2 font-semibold text-white">
-                  Hết hàng
-                </span>
-              </div>
+        {/* Content */}
+        <div className="p-4">
+          <h3 className="group-hover:text-primary-600 mb-1 line-clamp-2 text-sm font-medium text-stone-800 transition-colors">
+            {product.name}
+          </h3>
+
+          {typeof product.shopId === 'object' && product.shopId?.name && (
+            <p className="mb-2 truncate text-xs text-stone-400">{product.shopId.name}</p>
+          )}
+
+          <div className="flex items-baseline gap-2">
+            <span className="text-primary-600 text-base font-bold">
+              {formatPrice(product.salePrice ?? product.price)}
+            </span>
+            {hasDiscount && (
+              <span className="text-xs text-stone-400 line-through">
+                {formatPrice(product.price)}
+              </span>
             )}
           </div>
 
-          {/* Content */}
-          <div className="space-y-2 p-4">
-            <h3 className="group-hover:text-primary-600 line-clamp-2 min-h-[48px] font-semibold text-stone-800 transition-colors">
-              {product.name}
-            </h3>
-
-            {/* Shop name */}
-            {typeof product.shopId === 'object' && product.shopId?.name && (
-              <p className="flex items-center gap-1 truncate text-xs text-stone-500">
-                <Gift className="h-3 w-3" />
-                {product.shopId.name}
-              </p>
-            )}
-
-            {/* Price */}
-            <div className="flex items-center gap-2 pt-1">
-              <motion.span
-                key={product.salePrice ?? product.price}
-                initial={{ scale: 1.2, color: '#ec4899' }}
-                animate={{ scale: 1, color: '#db2777' }}
-                className="from-primary-600 bg-gradient-to-r to-pink-600 bg-clip-text text-lg font-bold text-transparent"
-              >
-                {formatPrice(product.salePrice ?? product.price)}
-              </motion.span>
-              {hasDiscount && (
-                <span className="text-sm text-stone-400 line-through">
-                  {formatPrice(product.price)}
-                </span>
-              )}
-            </div>
-
-            {/* Stats */}
-            {(product.totalSold ?? 0) > 0 && (
-              <p className="flex items-center gap-1 text-xs text-stone-500">
-                <Tag className="h-3 w-3" />
-                Đã bán {product.totalSold}
-              </p>
-            )}
-          </div>
-        </motion.div>
-      </Link>
-    </motion.div>
+          {(product.totalSold ?? 0) > 0 && (
+            <p className="mt-1 text-xs text-stone-400">Đã bán {product.totalSold}</p>
+          )}
+        </div>
+      </div>
+    </Link>
   );
 }
 
@@ -250,41 +187,32 @@ function CatalogPagination({
   if (totalPages <= 1) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex items-center justify-center gap-3"
-    >
+    <div className="flex items-center justify-center gap-2">
       <Button
         variant="outline"
         size="sm"
         onClick={() => onPageChange(page - 1)}
         disabled={!hasPrev}
-        className="glass-button"
       >
-        ← Trước
+        Trước
       </Button>
 
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1">
         {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
           const pageNum =
             page <= 3 ? i + 1 : page >= totalPages - 2 ? totalPages - 4 + i : page - 2 + i;
           if (pageNum < 1 || pageNum > totalPages) return null;
           return (
-            <motion.button
+            <button
               key={pageNum}
               onClick={() => onPageChange(pageNum)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
               className={cn(
-                'h-10 w-10 rounded-xl text-sm font-semibold transition-all',
-                pageNum === page
-                  ? 'from-primary-500 shadow-primary-500/25 bg-gradient-to-r to-pink-500 text-white shadow-lg'
-                  : 'glass hover:text-primary-600 text-stone-600'
+                'h-9 w-9 rounded-lg text-sm font-medium transition-colors',
+                pageNum === page ? 'bg-primary-600 text-white' : 'text-stone-600 hover:bg-stone-100'
               )}
             >
               {pageNum}
-            </motion.button>
+            </button>
           );
         })}
       </div>
@@ -294,11 +222,10 @@ function CatalogPagination({
         size="sm"
         onClick={() => onPageChange(page + 1)}
         disabled={!hasNext}
-        className="glass-button"
       >
-        Tiếp →
+        Tiếp
       </Button>
-    </motion.div>
+    </div>
   );
 }
 
@@ -359,60 +286,18 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-rose-50" />
-        <motion.div
-          className="absolute top-32 -right-32 h-96 w-96 rounded-full bg-gradient-to-br from-amber-200/30 to-orange-300/30 blur-3xl"
-          animate={{
-            x: [0, -30, 0],
-            y: [0, 40, 0],
-          }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-32 -left-32 h-80 w-80 rounded-full bg-gradient-to-br from-rose-200/30 to-pink-300/30 blur-3xl"
-          animate={{
-            x: [0, 40, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
-
-      <Container className="relative z-10 py-10">
-        {/* Breadcrumbs */}
+    <div className="min-h-screen bg-stone-50">
+      <Container className="py-8">
         <Breadcrumbs items={[{ label: 'Sản phẩm hoa' }]} className="mb-6" />
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="mb-2 flex items-center gap-3">
-            <motion.span
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-3xl"
-            >
-              💐
-            </motion.span>
-            <h1 className="bg-gradient-to-r from-stone-800 via-amber-600 to-rose-600 bg-clip-text text-3xl font-bold text-transparent md:text-4xl">
-              Sản phẩm hoa
-            </h1>
-          </div>
-          <p className="text-lg text-stone-600">Khám phá các mẫu hoa đẹp từ các shop uy tín</p>
-        </motion.div>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-stone-900 md:text-3xl">Sản phẩm hoa</h1>
+          <p className="mt-1 text-stone-500">Khám phá các mẫu hoa đẹp từ các shop uy tín</p>
+        </div>
 
         {/* Toolbar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="glass mb-4 rounded-2xl p-4"
-        >
+        <div className="mb-4 rounded-xl border border-stone-200 bg-white p-4">
           <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
             {/* Search */}
             <div className="flex min-w-0 flex-1 gap-2">
@@ -424,17 +309,15 @@ export default function ProductsPage() {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="w-full rounded-xl border border-stone-200 bg-white/80 py-2.5 pr-4 pl-10 transition-all outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  className="w-full rounded-lg border border-stone-200 bg-white py-2.5 pr-4 pl-10 text-sm transition-colors outline-none focus:border-stone-400"
                 />
               </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 onClick={handleSearch}
-                className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 font-medium text-white shadow-lg shadow-amber-500/25 transition-shadow hover:shadow-xl hover:shadow-amber-500/30"
+                className="bg-primary-600 hover:bg-primary-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-colors"
               >
                 Tìm
-              </motion.button>
+              </button>
             </div>
 
             {/* Sort */}
@@ -450,7 +333,7 @@ export default function ProductsPage() {
                   setSortOption(e.target.value);
                   setPage(1);
                 }}
-                className="min-w-[160px] cursor-pointer appearance-none rounded-xl border border-stone-200 bg-white/80 px-4 py-2.5 pr-10 text-sm font-medium text-stone-700 transition-all hover:border-amber-300 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 focus:outline-none"
+                className="min-w-[160px] cursor-pointer appearance-none rounded-lg border border-stone-200 bg-white px-4 py-2.5 pr-10 text-sm text-stone-700 transition-colors hover:border-stone-300 focus:border-stone-400 focus:outline-none"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -462,265 +345,197 @@ export default function ProductsPage() {
             </div>
 
             {/* Filter Toggle */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={() => setShowFilters(!showFilters)}
               className={cn(
-                'flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-all',
+                'flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
                 showFilters
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
-                  : 'glass-button text-stone-700'
+                  ? 'bg-primary-600 text-white'
+                  : 'border border-stone-200 text-stone-700 hover:bg-stone-50'
               )}
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span>Bộ lọc</span>
               {activeFilterCount > 0 && (
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">
+                <span className="bg-primary-100 text-primary-700 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
                   {activeFilterCount}
                 </span>
               )}
-            </motion.button>
+            </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Filter Panel */}
-        <AnimatePresence>
-          {showFilters && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="glass mb-6 overflow-hidden rounded-2xl p-6"
-            >
-              {/* Active Filters */}
-              <AnimatePresence>
-                {hasActiveFilters && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mb-5 flex flex-wrap items-center gap-2 border-b border-stone-200/50 pb-5"
-                  >
-                    <span className="flex items-center gap-1 text-sm text-stone-500">
-                      <Sparkles className="h-4 w-4" />
-                      Đang lọc:
-                    </span>
-                    {category && (
-                      <FilterTag
-                        label={`${CATEGORIES.find((c) => c.value === category)?.icon ?? ''} ${CATEGORIES.find((c) => c.value === category)?.label ?? category}`}
-                        onRemove={() => {
-                          setCategory('');
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    {occasion && (
-                      <FilterTag
-                        label={`${OCCASIONS.find((o) => o.value === occasion)?.icon ?? ''} ${OCCASIONS.find((o) => o.value === occasion)?.label ?? occasion}`}
-                        onRemove={() => {
-                          setOccasion('');
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    {priceRange > 0 && (
-                      <FilterTag
-                        label={currentPrice.label}
-                        onRemove={() => {
-                          setPriceRange(0);
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    {search && (
-                      <FilterTag
-                        label={`"${search}"`}
-                        onRemove={() => {
-                          setSearch('');
-                          setSearchInput('');
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleClearFilters}
-                      className="ml-2 text-sm font-semibold text-amber-600 hover:text-amber-700"
-                    >
-                      Xoá tất cả
-                    </motion.button>
-                  </motion.div>
+        {showFilters && (
+          <div className="mb-6 rounded-xl border border-stone-200 bg-white p-6">
+            {/* Active Filters */}
+            {hasActiveFilters && (
+              <div className="mb-5 flex flex-wrap items-center gap-2 border-b border-stone-100 pb-5">
+                <span className="text-sm text-stone-500">Đang lọc:</span>
+                {category && (
+                  <FilterTag
+                    label={CATEGORIES.find((c) => c.value === category)?.label ?? category}
+                    onRemove={() => {
+                      setCategory('');
+                      setPage(1);
+                    }}
+                  />
                 )}
-              </AnimatePresence>
-
-              {/* Category */}
-              <div className="mb-6">
-                <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
-                  <Package className="h-4 w-4" /> Loại sản phẩm
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {CATEGORIES.map((c, i) => (
-                    <motion.button
-                      key={c.value}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.03 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setCategory(c.value);
-                        setPage(1);
-                      }}
-                      className={cn(
-                        'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all',
-                        category === c.value
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25'
-                          : 'glass-button text-stone-600 hover:text-amber-600'
-                      )}
-                    >
-                      <span>{c.icon}</span>
-                      {c.label}
-                    </motion.button>
-                  ))}
-                </div>
+                {occasion && (
+                  <FilterTag
+                    label={OCCASIONS.find((o) => o.value === occasion)?.label ?? occasion}
+                    onRemove={() => {
+                      setOccasion('');
+                      setPage(1);
+                    }}
+                  />
+                )}
+                {priceRange > 0 && (
+                  <FilterTag
+                    label={currentPrice.label}
+                    onRemove={() => {
+                      setPriceRange(0);
+                      setPage(1);
+                    }}
+                  />
+                )}
+                {search && (
+                  <FilterTag
+                    label={`"${search}"`}
+                    onRemove={() => {
+                      setSearch('');
+                      setSearchInput('');
+                      setPage(1);
+                    }}
+                  />
+                )}
+                <button
+                  onClick={handleClearFilters}
+                  className="text-primary-600 hover:text-primary-700 ml-2 text-sm font-medium"
+                >
+                  Xoá tất cả
+                </button>
               </div>
+            )}
 
-              {/* Occasion */}
-              <div className="mb-6">
-                <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
-                  <Gift className="h-4 w-4" /> Dịp tặng
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {OCCASIONS.map((o, i) => (
-                    <motion.button
-                      key={o.value}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.03 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setOccasion(o.value);
-                        setPage(1);
-                      }}
-                      className={cn(
-                        'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all',
-                        occasion === o.value
-                          ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/25'
-                          : 'glass-button text-stone-600 hover:text-rose-600'
-                      )}
-                    >
-                      <span>{o.icon}</span>
-                      {o.label}
-                    </motion.button>
-                  ))}
-                </div>
+            {/* Category */}
+            <div className="mb-5">
+              <p className="mb-3 text-sm font-medium text-stone-700">Loại sản phẩm</p>
+              <div className="flex flex-wrap gap-2">
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => {
+                      setCategory(c.value);
+                      setPage(1);
+                    }}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 text-sm transition-colors',
+                      category === c.value
+                        ? 'bg-primary-600 font-medium text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    )}
+                  >
+                    {c.label}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              {/* Price Range */}
-              <div>
-                <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
-                  <Tag className="h-4 w-4" /> Khoảng giá
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {PRICE_RANGES.map((p, idx) => (
-                    <motion.button
-                      key={idx}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.05 }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setPriceRange(idx);
-                        setPage(1);
-                      }}
-                      className={cn(
-                        'rounded-xl px-4 py-2 text-sm font-medium transition-all',
-                        priceRange === idx
-                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                          : 'glass-button text-stone-600 hover:text-emerald-600'
-                      )}
-                    >
-                      {p.label}
-                    </motion.button>
-                  ))}
-                </div>
+            {/* Occasion */}
+            <div className="mb-5">
+              <p className="mb-3 text-sm font-medium text-stone-700">Dịp tặng</p>
+              <div className="flex flex-wrap gap-2">
+                {OCCASIONS.map((o) => (
+                  <button
+                    key={o.value}
+                    onClick={() => {
+                      setOccasion(o.value);
+                      setPage(1);
+                    }}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 text-sm transition-colors',
+                      occasion === o.value
+                        ? 'bg-primary-600 font-medium text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    )}
+                  >
+                    {o.label}
+                  </button>
+                ))}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+
+            {/* Price Range */}
+            <div>
+              <p className="mb-3 text-sm font-medium text-stone-700">Khoảng giá</p>
+              <div className="flex flex-wrap gap-2">
+                {PRICE_RANGES.map((p, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setPriceRange(idx);
+                      setPage(1);
+                    }}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 text-sm transition-colors',
+                      priceRange === idx
+                        ? 'bg-primary-600 font-medium text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    )}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Results count */}
         {!isLoading && !isError && pagination.total > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-6 flex items-center justify-between px-1"
-          >
-            <p className="text-sm text-stone-600">
-              Hiển thị <span className="font-semibold text-stone-800">{products.length}</span> /{' '}
+          <div className="mb-4 flex items-center justify-between px-1">
+            <p className="text-sm text-stone-500">
+              Hiển thị <span className="font-medium text-stone-700">{products.length}</span> /{' '}
               {pagination.total} sản phẩm
             </p>
             <p className="text-sm text-stone-400">
               Sắp xếp: <span className="text-stone-600">{currentSort.label}</span>
             </p>
-          </motion.div>
+          </div>
         )}
 
         {/* Content */}
         {isError ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass space-y-4 rounded-2xl py-20 text-center"
-          >
-            <AlertCircle className="mx-auto h-12 w-12 text-rose-400" />
-            <p className="text-lg font-semibold text-stone-700">Đã xảy ra lỗi khi tải dữ liệu</p>
-            <p className="text-stone-500">Vui lòng thử lại sau</p>
-          </motion.div>
+          <div className="rounded-xl border border-stone-200 bg-white py-20 text-center">
+            <AlertCircle className="mx-auto mb-4 h-10 w-10 text-stone-300" />
+            <p className="font-medium text-stone-700">Đã xảy ra lỗi khi tải dữ liệu</p>
+            <p className="mt-1 text-sm text-stone-500">Vui lòng thử lại sau</p>
+          </div>
         ) : isLoading ? (
           <ProductListSkeleton count={12} columns={4} />
         ) : products.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass space-y-4 rounded-2xl py-24 text-center"
-          >
-            <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-              <Inbox className="mx-auto h-16 w-16 text-stone-300" />
-            </motion.div>
-            <p className="text-xl font-semibold text-stone-700">Không tìm thấy sản phẩm nào</p>
-            <p className="text-stone-500">Hãy thử thay đổi bộ lọc hoặc từ khoá tìm kiếm</p>
+          <div className="rounded-xl border border-stone-200 bg-white py-24 text-center">
+            <Inbox className="mx-auto mb-4 h-12 w-12 text-stone-300" />
+            <p className="text-lg font-medium text-stone-700">Không tìm thấy sản phẩm nào</p>
+            <p className="mt-1 text-stone-500">Hãy thử thay đổi bộ lọc hoặc từ khoá tìm kiếm</p>
             {hasActiveFilters && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="pt-4"
-              >
-                <Button variant="outline" onClick={handleClearFilters} className="glass-button">
+              <div className="mt-6">
+                <Button variant="outline" onClick={handleClearFilters}>
                   Xoá bộ lọc
                 </Button>
-              </motion.div>
+              </div>
             )}
-          </motion.div>
+          </div>
         ) : (
           <>
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4"
-            >
-              {products.map((product, index) => (
-                <ProductCard key={product._id} product={product} index={index} />
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {products.map((product) => (
+                <ProductCard key={product._id} product={product} />
               ))}
-            </motion.div>
+            </div>
 
-            {/* Pagination */}
-            <div className="mt-12">
+            <div className="mt-10">
               <CatalogPagination
                 page={pagination.page}
                 totalPages={pagination.totalPages}

@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, ChevronDown, Filter, Inbox, Search, Sparkles, X } from 'lucide-react';
+import { AlertCircle, ChevronDown, Inbox, Search, SlidersHorizontal, X } from 'lucide-react';
 import { Container } from '@/components/layout';
 import { Button, FlowerListSkeleton } from '@/components/ui';
 import { AppImage } from '@/components/ui/app-image';
@@ -21,111 +20,70 @@ import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const EMOTIONS = [
-  { key: 'romantic', label: 'Lãng mạn', emoji: '💕' },
-  { key: 'grateful', label: 'Biết ơn', emoji: '🙏' },
-  { key: 'joyful', label: 'Vui vẻ', emoji: '😊' },
-  { key: 'sympathetic', label: 'Chia sẻ', emoji: '🤝' },
-  { key: 'respectful', label: 'Kính trọng', emoji: '🎩' },
-  { key: 'apologetic', label: 'Xin lỗi', emoji: '💔' },
-  { key: 'celebratory', label: 'Chúc mừng', emoji: '🎉' },
-  { key: 'passionate', label: 'Đam mê', emoji: '🔥' },
-  { key: 'hopeful', label: 'Hy vọng', emoji: '🌟' },
-  { key: 'peaceful', label: 'Bình yên', emoji: '☮️' },
+  { key: 'romantic', label: 'Lãng mạn' },
+  { key: 'grateful', label: 'Biết ơn' },
+  { key: 'joyful', label: 'Vui vẻ' },
+  { key: 'sympathetic', label: 'Đồng cảm' },
+  { key: 'respectful', label: 'Kính trọng' },
+  { key: 'apologetic', label: 'Xin lỗi' },
+  { key: 'celebratory', label: 'Chúc mừng' },
+  { key: 'passionate', label: 'Đam mê' },
+  { key: 'inspiring', label: 'Cảm hứng' },
+  { key: 'peaceful', label: 'Bình yên' },
 ];
 
 const COLOR_FILTERS = [
-  { value: '', label: 'Tất cả', gradient: 'from-stone-200 to-stone-300' },
-  { value: 'đỏ', label: 'Đỏ', gradient: 'from-red-400 to-rose-500' },
-  { value: 'hồng', label: 'Hồng', gradient: 'from-pink-300 to-pink-500' },
-  { value: 'trắng', label: 'Trắng', gradient: 'from-white to-stone-100' },
-  { value: 'vàng', label: 'Vàng', gradient: 'from-yellow-300 to-amber-400' },
-  { value: 'tím', label: 'Tím', gradient: 'from-purple-400 to-violet-500' },
-  { value: 'cam', label: 'Cam', gradient: 'from-orange-400 to-orange-500' },
-  { value: 'xanh', label: 'Xanh', gradient: 'from-blue-400 to-cyan-500' },
+  { value: 'đỏ', label: 'Đỏ', hex: '#dc2626' },
+  { value: 'hồng', label: 'Hồng', hex: '#ec4899' },
+  { value: 'trắng', label: 'Trắng', hex: '#f5f5f4' },
+  { value: 'vàng', label: 'Vàng', hex: '#eab308' },
+  { value: 'tím', label: 'Tím', hex: '#8b5cf6' },
+  { value: 'cam', label: 'Cam', hex: '#f97316' },
+  { value: 'xanh', label: 'Xanh', hex: '#3b82f6' },
 ];
 
 const SEASONS = [
-  { value: '', label: 'Tất cả mùa', icon: '🌍' },
-  { value: 'spring', label: 'Xuân', icon: '🌸' },
-  { value: 'summer', label: 'Hạ', icon: '☀️' },
-  { value: 'autumn', label: 'Thu', icon: '🍂' },
-  { value: 'winter', label: 'Đông', icon: '❄️' },
+  { value: 'spring', label: 'Xuân' },
+  { value: 'summer', label: 'Hạ' },
+  { value: 'autumn', label: 'Thu' },
+  { value: 'winter', label: 'Đông' },
 ];
 
 const SORT_OPTIONS: { value: string; label: string; sortBy: FlowerSortBy; order: SortOrder }[] = [
   { value: 'popular', label: 'Phổ biến nhất', sortBy: 'popularityScore', order: 'desc' },
+  { value: 'name-az', label: 'Tên A → Z', sortBy: 'name', order: 'asc' },
+  { value: 'name-za', label: 'Tên Z → A', sortBy: 'name', order: 'desc' },
   { value: 'newest', label: 'Mới nhất', sortBy: 'createdAt', order: 'desc' },
-  { value: 'oldest', label: 'Cũ nhất', sortBy: 'createdAt', order: 'asc' },
-  { value: 'name-asc', label: 'Tên A → Z', sortBy: 'name', order: 'asc' },
-  { value: 'name-desc', label: 'Tên Z → A', sortBy: 'name', order: 'desc' },
 ];
 
 const COLOR_HEX: Record<string, string> = {
-  red: '#ef4444',
-  đỏ: '#ef4444',
-  pink: '#ec4899',
+  đỏ: '#dc2626',
+  red: '#dc2626',
   hồng: '#ec4899',
-  white: '#f5f5f4',
+  pink: '#ec4899',
   trắng: '#f5f5f4',
-  yellow: '#eab308',
+  white: '#f5f5f4',
   vàng: '#eab308',
-  purple: '#a855f7',
-  tím: '#a855f7',
-  orange: '#f97316',
+  yellow: '#eab308',
+  tím: '#8b5cf6',
+  purple: '#8b5cf6',
   cam: '#f97316',
-  blue: '#3b82f6',
-  'xanh dương': '#3b82f6',
-  green: '#22c55e',
-  'xanh lá': '#22c55e',
+  orange: '#f97316',
   xanh: '#3b82f6',
+  blue: '#3b82f6',
 };
 
-// ─── Animation Variants ───────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.06 },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: 'spring' as const, stiffness: 300, damping: 24 },
-  },
-};
-
-const filterPanelVariants = {
-  hidden: { opacity: 0, height: 0, marginBottom: 0 },
-  visible: {
-    opacity: 1,
-    height: 'auto',
-    marginBottom: 24,
-    transition: { duration: 0.3, ease: 'easeOut' as const },
-  },
-  exit: {
-    opacity: 0,
-    height: 0,
-    marginBottom: 0,
-    transition: { duration: 0.2, ease: 'easeIn' as const },
-  },
-};
+function getColorHex(color: string): string {
+  return COLOR_HEX[color.toLowerCase()] ?? '#a8a29e';
+}
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function FilterTag({ label, onRemove }: { label: string; onRemove: () => void }) {
   return (
-    <motion.span
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      className="from-primary-50 text-primary-700 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r to-pink-50 px-3 py-1.5 text-sm font-medium shadow-sm"
-    >
+    <span className="bg-primary-50 text-primary-700 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium">
       {label}
       <button
         onClick={onRemove}
@@ -133,99 +91,62 @@ function FilterTag({ label, onRemove }: { label: string; onRemove: () => void })
       >
         <X className="h-3.5 w-3.5" />
       </button>
-    </motion.span>
+    </span>
   );
 }
 
-function FlowerCard({ flower, index }: { flower: Flower; index: number }) {
+function FlowerCard({ flower }: { flower: Flower }) {
   const imageUrl = getFlowerImageUrl(flower.images);
+  const name = typeof flower.name === 'object' ? (flower.name.vi ?? flower.name.en) : flower.name;
+  const meaning =
+    Array.isArray(flower.meanings) && flower.meanings.length > 0 ? flower.meanings[0] : undefined;
 
   return (
-    <motion.div variants={cardVariants} custom={index}>
-      <Link href={`/flowers/${flower.slug}`} className="group block">
-        <motion.div
-          className="glass overflow-hidden rounded-2xl"
-          whileHover={{ y: -4 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-        >
-          {/* Image Container */}
-          <div className="relative aspect-square overflow-hidden">
-            {/* Gradient overlay on hover */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-            {/* Quick view badge */}
-            <div className="absolute right-3 bottom-3 left-3 z-20">
-              <span className="glass-button px-3 py-1.5 text-sm font-medium text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                Xem chi tiết →
-              </span>
+    <Link href={`/flowers/${flower.slug}`} className="group block">
+      <div className="overflow-hidden rounded-xl border border-stone-200 bg-white transition-shadow hover:shadow-md">
+        {/* Image */}
+        <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
+          {imageUrl ? (
+            <AppImage
+              src={imageUrl}
+              alt={name}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-stone-300">
+              <div className="h-16 w-16 rounded-full bg-stone-200" />
             </div>
+          )}
 
-            {imageUrl ? (
-              <AppImage
-                src={imageUrl}
-                alt={flower.name.vi}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-pink-100 to-rose-50">
-                <span className="text-4xl">🌸</span>
-              </div>
-            )}
-          </div>
+          {/* Colors */}
+          {flower.colors && flower.colors.length > 0 && (
+            <div className="absolute bottom-2 left-2 flex gap-1">
+              {flower.colors.slice(0, 4).map((color) => (
+                <span
+                  key={color}
+                  className="h-4 w-4 rounded-full border-2 border-white shadow-sm"
+                  style={{ backgroundColor: getColorHex(color) }}
+                  title={color}
+                />
+              ))}
+            </div>
+          )}
+        </div>
 
-          {/* Info */}
-          <div className="space-y-2.5 p-4">
-            <h3 className="group-hover:text-primary-600 line-clamp-1 font-semibold text-stone-800 transition-colors">
-              {flower.name.vi}
-            </h3>
-            <p className="line-clamp-1 text-sm text-stone-500 italic">{flower.name.en}</p>
-
-            {/* Color dots with tooltip effect */}
-            {flower.colors.length > 0 && (
-              <div className="flex items-center gap-2 pt-1">
-                {flower.colors.slice(0, 5).map((colorName, i) => (
-                  <motion.span
-                    key={colorName}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: i * 0.05 }}
-                    title={colorName}
-                    className="h-5 w-5 shrink-0 rounded-full shadow-sm ring-2 ring-white"
-                    style={{
-                      backgroundColor: COLOR_HEX[colorName.toLowerCase()] ?? '#d1d5db',
-                    }}
-                  />
-                ))}
-                {flower.colors.length > 5 && (
-                  <span className="text-xs font-medium text-stone-400">
-                    +{flower.colors.length - 5}
-                  </span>
-                )}
-              </div>
-            )}
-
-            {/* Meanings as gradient pills */}
-            {flower.meanings.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {flower.meanings.slice(0, 2).map((meaning) => (
-                  <span
-                    key={meaning}
-                    className="inline-block rounded-full border border-stone-200 bg-gradient-to-r from-stone-50 to-stone-100 px-2.5 py-1 text-xs text-stone-600"
-                  >
-                    {meaning}
-                  </span>
-                ))}
-                {flower.meanings.length > 2 && (
-                  <span className="inline-block px-2 py-1 text-xs text-stone-400">
-                    +{flower.meanings.length - 2}
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-        </motion.div>
-      </Link>
-    </motion.div>
+        {/* Content */}
+        <div className="p-4">
+          <h3 className="group-hover:text-primary-600 mb-1 line-clamp-1 font-medium text-stone-800 transition-colors">
+            {name}
+          </h3>
+          {meaning && (
+            <p className="line-clamp-2 text-sm leading-relaxed text-stone-500">{meaning}</p>
+          )}
+          {flower.seasons && flower.seasons.length > 0 && (
+            <p className="mt-2 text-xs text-stone-400">Mùa: {flower.seasons.join(', ')}</p>
+          )}
+        </div>
+      </div>
+    </Link>
   );
 }
 
@@ -244,61 +165,35 @@ function CatalogPagination({
 }) {
   if (totalPages <= 1) return null;
 
-  const getPages = () => {
-    const pages: (number | 'ellipsis')[] = [];
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (page > 3) pages.push('ellipsis');
-      const start = Math.max(2, page - 1);
-      const end = Math.min(totalPages - 1, page + 1);
-      for (let i = start; i <= end; i++) pages.push(i);
-      if (page < totalPages - 2) pages.push('ellipsis');
-      pages.push(totalPages);
-    }
-    return pages;
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex items-center justify-center gap-2"
-    >
+    <div className="flex items-center justify-center gap-2">
       <Button
         variant="outline"
         size="sm"
         onClick={() => onPageChange(page - 1)}
         disabled={!hasPrev}
-        className="glass-button"
       >
-        ← Trước
+        Trước
       </Button>
 
       <div className="flex items-center gap-1">
-        {getPages().map((p, idx) =>
-          p === 'ellipsis' ? (
-            <span key={`ellipsis-${idx}`} className="px-2 text-stone-400">
-              …
-            </span>
-          ) : (
-            <motion.button
-              key={p}
-              onClick={() => onPageChange(p)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+          const pageNum =
+            page <= 3 ? i + 1 : page >= totalPages - 2 ? totalPages - 4 + i : page - 2 + i;
+          if (pageNum < 1 || pageNum > totalPages) return null;
+          return (
+            <button
+              key={pageNum}
+              onClick={() => onPageChange(pageNum)}
               className={cn(
-                'h-10 w-10 rounded-xl text-sm font-semibold transition-all',
-                p === page
-                  ? 'from-primary-500 shadow-primary-500/25 bg-gradient-to-r to-pink-500 text-white shadow-lg'
-                  : 'glass hover:text-primary-600 text-stone-600'
+                'h-9 w-9 rounded-lg text-sm font-medium transition-colors',
+                pageNum === page ? 'bg-primary-600 text-white' : 'text-stone-600 hover:bg-stone-100'
               )}
             >
-              {p}
-            </motion.button>
-          )
-        )}
+              {pageNum}
+            </button>
+          );
+        })}
       </div>
 
       <Button
@@ -306,11 +201,10 @@ function CatalogPagination({
         size="sm"
         onClick={() => onPageChange(page + 1)}
         disabled={!hasNext}
-        className="glass-button"
       >
-        Tiếp →
+        Tiếp
       </Button>
-    </motion.div>
+    </div>
   );
 }
 
@@ -318,14 +212,15 @@ function CatalogPagination({
 
 export default function FlowersPage() {
   const searchParams = useSearchParams();
+  const initialEmotion = searchParams.get('emotion') ?? '';
 
-  const [emotion, setEmotion] = useState(searchParams.get('emotion') ?? '');
+  const [emotion, setEmotion] = useState(initialEmotion);
   const [color, setColor] = useState('');
   const [season, setSeason] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [sortOption, setSortOption] = useState('popular');
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(Boolean(initialEmotion));
   const [page, setPage] = useState(1);
 
   const currentSort = SORT_OPTIONS.find((s) => s.value === sortOption) ?? SORT_OPTIONS[0];
@@ -354,11 +249,6 @@ export default function FlowersPage() {
   const hasActiveFilters = Boolean(emotion || color || season || search);
   const activeFilterCount = [emotion, color, season, search].filter(Boolean).length;
 
-  const handleEmotionClick = (em: string) => {
-    setEmotion((prev) => (prev === em ? '' : em));
-    setPage(1);
-  };
-
   const handleSearch = () => {
     setSearch(searchInput);
     setPage(1);
@@ -374,60 +264,18 @@ export default function FlowersPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-pink-50" />
-        <motion.div
-          className="absolute top-20 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-pink-200/30 to-rose-300/30 blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute -right-32 bottom-20 h-80 w-80 rounded-full bg-gradient-to-br from-purple-200/30 to-pink-300/30 blur-3xl"
-          animate={{
-            x: [0, -40, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
-
-      <Container className="relative z-10 py-10">
-        {/* Breadcrumbs */}
+    <div className="min-h-screen bg-stone-50">
+      <Container className="py-8">
         <Breadcrumbs items={[{ label: 'Bộ sưu tập hoa' }]} className="mb-6" />
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="mb-2 flex items-center gap-3">
-            <motion.span
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-3xl"
-            >
-              🌸
-            </motion.span>
-            <h1 className="via-primary-600 bg-gradient-to-r from-stone-800 to-pink-600 bg-clip-text text-3xl font-bold text-transparent md:text-4xl">
-              Bộ sưu tập hoa
-            </h1>
-          </div>
-          <p className="text-lg text-stone-600">Khám phá ý nghĩa và vẻ đẹp của từng loài hoa</p>
-        </motion.div>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-stone-900 md:text-3xl">Bộ sưu tập hoa</h1>
+          <p className="mt-1 text-stone-500">Khám phá các loài hoa đẹp và ý nghĩa của chúng</p>
+        </div>
 
         {/* Toolbar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="glass mb-4 rounded-2xl p-4"
-        >
+        <div className="mb-4 rounded-xl border border-stone-200 bg-white p-4">
           <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
             {/* Search */}
             <div className="flex min-w-0 flex-1 gap-2">
@@ -435,37 +283,35 @@ export default function FlowersPage() {
                 <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-stone-400" />
                 <input
                   type="text"
-                  placeholder="Tìm kiếm tên hoa…"
+                  placeholder="Tìm kiếm loài hoa…"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="focus:border-primary-400 focus:ring-primary-100 w-full rounded-xl border border-stone-200 bg-white/80 py-2.5 pr-4 pl-10 transition-all outline-none focus:ring-2"
+                  className="w-full rounded-lg border border-stone-200 bg-white py-2.5 pr-4 pl-10 text-sm transition-colors outline-none focus:border-stone-400"
                 />
               </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 onClick={handleSearch}
-                className="from-primary-500 shadow-primary-500/25 hover:shadow-primary-500/30 rounded-xl bg-gradient-to-r to-pink-500 px-5 py-2.5 font-medium text-white shadow-lg transition-shadow hover:shadow-xl"
+                className="bg-primary-600 hover:bg-primary-700 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-colors"
               >
                 Tìm
-              </motion.button>
+              </button>
             </div>
 
-            {/* Sort Dropdown */}
+            {/* Sort */}
             <div className="relative">
               <label htmlFor="sort-flowers" className="sr-only">
                 Sắp xếp theo
               </label>
               <select
                 id="sort-flowers"
-                aria-label="Sắp xếp sản phẩm"
+                aria-label="Sắp xếp loài hoa"
                 value={sortOption}
                 onChange={(e) => {
                   setSortOption(e.target.value);
                   setPage(1);
                 }}
-                className="hover:border-primary-300 focus:ring-primary-100 focus:border-primary-400 min-w-[160px] cursor-pointer appearance-none rounded-xl border border-stone-200 bg-white/80 px-4 py-2.5 pr-10 text-sm font-medium text-stone-700 transition-all focus:ring-2 focus:outline-none"
+                className="min-w-[160px] cursor-pointer appearance-none rounded-lg border border-stone-200 bg-white px-4 py-2.5 pr-10 text-sm text-stone-700 transition-colors hover:border-stone-300 focus:border-stone-400 focus:outline-none"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -477,278 +323,201 @@ export default function FlowersPage() {
             </div>
 
             {/* Filter Toggle */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={() => setShowFilters(!showFilters)}
               className={cn(
-                'flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-all',
+                'flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
                 showFilters
-                  ? 'from-primary-500 bg-gradient-to-r to-pink-500 text-white shadow-lg'
-                  : 'glass-button text-stone-700'
+                  ? 'bg-primary-600 text-white'
+                  : 'border border-stone-200 text-stone-700 hover:bg-stone-50'
               )}
             >
-              <Filter className="h-4 w-4" />
+              <SlidersHorizontal className="h-4 w-4" />
               <span>Bộ lọc</span>
               {activeFilterCount > 0 && (
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs font-bold">
+                <span className="bg-primary-100 text-primary-700 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
                   {activeFilterCount}
                 </span>
               )}
-            </motion.button>
+            </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Filter Panel */}
-        <AnimatePresence>
-          {showFilters && (
-            <motion.div
-              variants={filterPanelVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="glass overflow-hidden rounded-2xl p-6"
-            >
-              {/* Active Filters */}
-              <AnimatePresence>
-                {hasActiveFilters && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mb-5 flex flex-wrap items-center gap-2 border-b border-stone-200/50 pb-5"
-                  >
-                    <span className="flex items-center gap-1 text-sm text-stone-500">
-                      <Sparkles className="h-4 w-4" />
-                      Đang lọc:
-                    </span>
-                    {emotion && (
-                      <FilterTag
-                        label={`${EMOTIONS.find((e) => e.key === emotion)?.emoji ?? ''} ${EMOTIONS.find((e) => e.key === emotion)?.label ?? emotion}`}
-                        onRemove={() => {
-                          setEmotion('');
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    {color && (
-                      <FilterTag
-                        label={COLOR_FILTERS.find((c) => c.value === color)?.label ?? color}
-                        onRemove={() => {
-                          setColor('');
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    {season && (
-                      <FilterTag
-                        label={`${SEASONS.find((s) => s.value === season)?.icon ?? ''} ${SEASONS.find((s) => s.value === season)?.label ?? season}`}
-                        onRemove={() => {
-                          setSeason('');
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    {search && (
-                      <FilterTag
-                        label={`"${search}"`}
-                        onRemove={() => {
-                          setSearch('');
-                          setSearchInput('');
-                          setPage(1);
-                        }}
-                      />
-                    )}
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleClearFilters}
-                      className="text-primary-600 hover:text-primary-700 ml-2 text-sm font-semibold"
-                    >
-                      Xoá tất cả
-                    </motion.button>
-                  </motion.div>
+        {showFilters && (
+          <div className="mb-6 rounded-xl border border-stone-200 bg-white p-6">
+            {/* Active Filters */}
+            {hasActiveFilters && (
+              <div className="mb-5 flex flex-wrap items-center gap-2 border-b border-stone-100 pb-5">
+                <span className="text-sm text-stone-500">Đang lọc:</span>
+                {emotion && (
+                  <FilterTag
+                    label={EMOTIONS.find((e) => e.key === emotion)?.label ?? emotion}
+                    onRemove={() => {
+                      setEmotion('');
+                      setPage(1);
+                    }}
+                  />
                 )}
-              </AnimatePresence>
-
-              {/* Emotion filters */}
-              <div className="mb-6">
-                <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
-                  <span>💝</span> Cảm xúc
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {EMOTIONS.map((em, i) => (
-                    <motion.button
-                      key={em.key}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.03 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleEmotionClick(em.key)}
-                      className={cn(
-                        'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all',
-                        emotion === em.key
-                          ? 'from-primary-500 shadow-primary-500/25 bg-gradient-to-r to-pink-500 text-white shadow-lg'
-                          : 'glass-button hover:text-primary-600 text-stone-600'
-                      )}
-                    >
-                      <span>{em.emoji}</span>
-                      {em.label}
-                    </motion.button>
-                  ))}
-                </div>
+                {color && (
+                  <FilterTag
+                    label={COLOR_FILTERS.find((c) => c.value === color)?.label ?? color}
+                    onRemove={() => {
+                      setColor('');
+                      setPage(1);
+                    }}
+                  />
+                )}
+                {season && (
+                  <FilterTag
+                    label={SEASONS.find((s) => s.value === season)?.label ?? season}
+                    onRemove={() => {
+                      setSeason('');
+                      setPage(1);
+                    }}
+                  />
+                )}
+                {search && (
+                  <FilterTag
+                    label={`"${search}"`}
+                    onRemove={() => {
+                      setSearch('');
+                      setSearchInput('');
+                      setPage(1);
+                    }}
+                  />
+                )}
+                <button
+                  onClick={handleClearFilters}
+                  className="text-primary-600 hover:text-primary-700 ml-2 text-sm font-medium"
+                >
+                  Xoá tất cả
+                </button>
               </div>
+            )}
 
-              {/* Color filters */}
-              <div className="mb-6">
-                <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
-                  <span>🎨</span> Màu sắc
-                </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  {COLOR_FILTERS.map((c, i) => (
-                    <motion.button
-                      key={c.value}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.05 }}
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setColor(c.value);
-                        setPage(1);
-                      }}
-                      title={c.label}
-                      className={cn(
-                        'flex items-center gap-2 rounded-xl px-3 py-2 transition-all',
-                        color === c.value
-                          ? 'ring-primary-400 bg-white shadow-lg ring-2'
-                          : 'hover:bg-white/50'
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          'h-6 w-6 rounded-full bg-gradient-to-br shadow-sm',
-                          c.gradient,
-                          c.value === 'trắng' && 'ring-1 ring-stone-200'
-                        )}
-                      />
-                      <span
-                        className={cn(
-                          'text-sm',
-                          color === c.value ? 'font-semibold text-stone-900' : 'text-stone-600'
-                        )}
-                      >
-                        {c.label}
-                      </span>
-                    </motion.button>
-                  ))}
-                </div>
+            {/* Emotion */}
+            <div className="mb-5">
+              <p className="mb-3 text-sm font-medium text-stone-700">Cảm xúc</p>
+              <div className="flex flex-wrap gap-2">
+                {EMOTIONS.map((e) => (
+                  <button
+                    key={e.key}
+                    onClick={() => {
+                      setEmotion(emotion === e.key ? '' : e.key);
+                      setPage(1);
+                    }}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 text-sm transition-colors',
+                      emotion === e.key
+                        ? 'bg-primary-600 font-medium text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    )}
+                  >
+                    {e.label}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              {/* Season filters */}
-              <div>
-                <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-stone-700">
-                  <span>🗓️</span> Mùa
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {SEASONS.map((s, i) => (
-                    <motion.button
-                      key={s.value}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setSeason(s.value);
-                        setPage(1);
-                      }}
-                      className={cn(
-                        'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all',
-                        season === s.value
-                          ? 'bg-gradient-to-r from-stone-800 to-stone-700 text-white shadow-lg'
-                          : 'glass-button text-stone-600 hover:text-stone-800'
-                      )}
-                    >
-                      <span>{s.icon}</span>
-                      {s.label}
-                    </motion.button>
-                  ))}
-                </div>
+            {/* Color */}
+            <div className="mb-5">
+              <p className="mb-3 text-sm font-medium text-stone-700">Màu sắc</p>
+              <div className="flex flex-wrap gap-2">
+                {COLOR_FILTERS.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => {
+                      setColor(color === c.value ? '' : c.value);
+                      setPage(1);
+                    }}
+                    className={cn(
+                      'flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors',
+                      color === c.value
+                        ? 'bg-primary-600 font-medium text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    )}
+                  >
+                    <span
+                      className="h-3.5 w-3.5 rounded-full border border-stone-300"
+                      style={{ backgroundColor: c.hex }}
+                    />
+                    {c.label}
+                  </button>
+                ))}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+
+            {/* Season */}
+            <div>
+              <p className="mb-3 text-sm font-medium text-stone-700">Mùa</p>
+              <div className="flex flex-wrap gap-2">
+                {SEASONS.map((s) => (
+                  <button
+                    key={s.value}
+                    onClick={() => {
+                      setSeason(season === s.value ? '' : s.value);
+                      setPage(1);
+                    }}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 text-sm transition-colors',
+                      season === s.value
+                        ? 'bg-primary-600 font-medium text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    )}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Results count */}
         {!isLoading && !isError && pagination.total > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-6 flex items-center justify-between px-1"
-          >
-            <p className="text-sm text-stone-600">
-              Hiển thị <span className="font-semibold text-stone-800">{flowers.length}</span> /{' '}
+          <div className="mb-4 flex items-center justify-between px-1">
+            <p className="text-sm text-stone-500">
+              Hiển thị <span className="font-medium text-stone-700">{flowers.length}</span> /{' '}
               {pagination.total} loài hoa
             </p>
             <p className="text-sm text-stone-400">
               Sắp xếp: <span className="text-stone-600">{currentSort.label}</span>
             </p>
-          </motion.div>
+          </div>
         )}
 
         {/* Content */}
         {isError ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass space-y-4 rounded-2xl py-20 text-center"
-          >
-            <AlertCircle className="mx-auto h-12 w-12 text-rose-400" />
-            <p className="text-lg font-semibold text-stone-700">Đã xảy ra lỗi khi tải dữ liệu</p>
-            <p className="text-stone-500">Vui lòng thử lại sau</p>
-          </motion.div>
+          <div className="rounded-xl border border-stone-200 bg-white py-20 text-center">
+            <AlertCircle className="mx-auto mb-4 h-10 w-10 text-stone-300" />
+            <p className="font-medium text-stone-700">Đã xảy ra lỗi khi tải dữ liệu</p>
+            <p className="mt-1 text-sm text-stone-500">Vui lòng thử lại sau</p>
+          </div>
         ) : isLoading ? (
           <FlowerListSkeleton count={12} columns={4} />
         ) : flowers.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass space-y-4 rounded-2xl py-24 text-center"
-          >
-            <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-              <Inbox className="mx-auto h-16 w-16 text-stone-300" />
-            </motion.div>
-            <p className="text-xl font-semibold text-stone-700">Không tìm thấy loài hoa nào</p>
-            <p className="text-stone-500">Hãy thử thay đổi bộ lọc hoặc từ khoá tìm kiếm</p>
+          <div className="rounded-xl border border-stone-200 bg-white py-24 text-center">
+            <Inbox className="mx-auto mb-4 h-12 w-12 text-stone-300" />
+            <p className="text-lg font-medium text-stone-700">Không tìm thấy loài hoa nào</p>
+            <p className="mt-1 text-stone-500">Hãy thử thay đổi bộ lọc hoặc từ khoá tìm kiếm</p>
             {hasActiveFilters && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="pt-4"
-              >
-                <Button variant="outline" onClick={handleClearFilters} className="glass-button">
+              <div className="mt-6">
+                <Button variant="outline" onClick={handleClearFilters}>
                   Xoá bộ lọc
                 </Button>
-              </motion.div>
+              </div>
             )}
-          </motion.div>
+          </div>
         ) : (
           <>
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-            >
-              {flowers.map((flower, index) => (
-                <FlowerCard key={flower._id} flower={flower} index={index} />
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {flowers.map((flower) => (
+                <FlowerCard key={flower._id} flower={flower} />
               ))}
-            </motion.div>
+            </div>
 
-            {/* Pagination */}
-            <div className="mt-12">
+            <div className="mt-10">
               <CatalogPagination
                 page={pagination.page}
                 totalPages={pagination.totalPages}

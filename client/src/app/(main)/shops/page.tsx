@@ -25,15 +25,15 @@ import { AppImage } from '@/components/ui/app-image';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CITY_OPTIONS = [
-  { value: '', label: 'Tất cả thành phố', icon: '🌍' },
-  { value: 'Hà Nội', label: 'Hà Nội', icon: '🏛️' },
-  { value: 'Hồ Chí Minh', label: 'TP. Hồ Chí Minh', icon: '🌆' },
-  { value: 'Đà Nẵng', label: 'Đà Nẵng', icon: '🏖️' },
-  { value: 'Cần Thơ', label: 'Cần Thơ', icon: '🌾' },
-  { value: 'Hải Phòng', label: 'Hải Phòng', icon: '⚓' },
-  { value: 'Huế', label: 'Huế', icon: '🏯' },
-  { value: 'Nha Trang', label: 'Nha Trang', icon: '🌊' },
-  { value: 'Đà Lạt', label: 'Đà Lạt', icon: '🌸' },
+  { value: '', label: 'Tất cả thành phố' },
+  { value: 'Hà Nội', label: 'Hà Nội' },
+  { value: 'Hồ Chí Minh', label: 'TP. Hồ Chí Minh' },
+  { value: 'Đà Nẵng', label: 'Đà Nẵng' },
+  { value: 'Cần Thơ', label: 'Cần Thơ' },
+  { value: 'Hải Phòng', label: 'Hải Phòng' },
+  { value: 'Huế', label: 'Huế' },
+  { value: 'Nha Trang', label: 'Nha Trang' },
+  { value: 'Đà Lạt', label: 'Đà Lạt' },
 ];
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
@@ -89,7 +89,7 @@ function FilterTag({ label, onRemove }: { label: string; onRemove: () => void })
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-50 to-purple-50 px-3 py-1.5 text-sm font-medium text-violet-700 shadow-sm"
+      className="bg-primary-50 text-primary-700 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium shadow-sm"
     >
       {label}
       <button
@@ -105,7 +105,7 @@ function FilterTag({ label, onRemove }: { label: string; onRemove: () => void })
 function ShopCardSkeleton() {
   return (
     <div className="glass overflow-hidden rounded-2xl">
-      <div className="animate-shimmer h-40 bg-gradient-to-br from-stone-100 to-stone-50" />
+      <div className="animate-shimmer h-40 bg-stone-100" />
       <div className="space-y-3 p-5">
         <div className="flex items-start gap-3">
           <div className="animate-shimmer h-12 w-12 rounded-full bg-stone-100" />
@@ -140,7 +140,7 @@ function ShopCard({ shop, index }: { shop: Shop; index: number }) {
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         >
           {/* Cover Image */}
-          <div className="relative h-40 overflow-hidden bg-gradient-to-br from-violet-100 to-purple-50">
+          <div className="relative h-40 overflow-hidden bg-stone-100">
             {/* Gradient overlay */}
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
@@ -185,11 +185,11 @@ function ShopCard({ shop, index }: { shop: Shop; index: number }) {
           <div className="p-5">
             <div className="flex items-start gap-3">
               {/* Avatar */}
-              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-white bg-gradient-to-br from-violet-100 to-purple-100 shadow-lg transition-transform duration-300 group-hover:scale-105">
+              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-white bg-stone-100 shadow-lg transition-transform duration-300 group-hover:scale-105">
                 {shop.logo?.url ? (
                   <AppImage src={shop.logo.url} alt="" className="object-cover" />
                 ) : (
-                  <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-xl font-bold text-transparent">
+                  <span className="text-primary-600 text-xl font-bold">
                     {shop.name.charAt(0).toUpperCase()}
                   </span>
                 )}
@@ -209,7 +209,7 @@ function ShopCard({ shop, index }: { shop: Shop; index: number }) {
             </div>
 
             {/* Address */}
-            <div className="mt-4 rounded-xl bg-gradient-to-r from-stone-50 to-stone-100/50 p-3">
+            <div className="mt-4 rounded-xl bg-stone-50 p-3">
               <p className="line-clamp-2 flex items-start gap-2 text-sm text-stone-600">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-violet-500" />
                 {fullAddress}
@@ -222,7 +222,7 @@ function ShopCard({ shop, index }: { shop: Shop; index: number }) {
               whileHover={{ opacity: 1 }}
               className="mt-4 opacity-0 transition-opacity group-hover:opacity-100"
             >
-              <span className="block w-full rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 py-2.5 text-center font-medium text-white shadow-lg shadow-violet-500/25">
+              <span className="bg-primary-600 block w-full rounded-xl py-2.5 text-center font-medium text-white">
                 Xem cửa hàng →
               </span>
             </motion.div>
@@ -273,7 +273,7 @@ function ShopPagination({
               className={cn(
                 'h-10 w-10 rounded-xl text-sm font-semibold transition-all',
                 p === page
-                  ? 'bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg shadow-violet-500/25'
+                  ? 'bg-primary-600 text-white'
                   : 'glass text-stone-600 hover:text-violet-600'
               )}
             >
@@ -328,46 +328,16 @@ export default function ShopsPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-white to-purple-50" />
-        <motion.div
-          className="absolute top-20 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-violet-200/30 to-purple-300/30 blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute -right-32 bottom-20 h-80 w-80 rounded-full bg-gradient-to-br from-pink-200/30 to-rose-300/30 blur-3xl"
-          animate={{
-            x: [0, -40, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
-
-      <Container className="relative z-10 py-10">
+    <div className="bg-stone-50">
+      <Container className="py-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="mb-2 flex items-center gap-3">
-            <motion.span
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-3xl"
-            >
-              🏪
-            </motion.span>
-            <h1 className="bg-gradient-to-r from-stone-800 via-violet-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent md:text-4xl">
-              Cửa hàng Hoa
-            </h1>
+          <div className="mb-2">
+            <h1 className="text-3xl font-bold text-stone-900 md:text-4xl">Cửa hàng Hoa</h1>
           </div>
           <p className="text-lg text-stone-600">Tìm cửa hàng hoa uy tín gần bạn</p>
         </motion.div>
@@ -392,7 +362,7 @@ export default function ShopsPage() {
               >
                 {CITY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
-                    {opt.icon} {opt.label}
+                    {opt.label}
                   </option>
                 ))}
               </select>
@@ -416,7 +386,7 @@ export default function ShopsPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSearch}
-                className="rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 px-5 py-2.5 font-medium text-white shadow-lg shadow-violet-500/25 transition-shadow hover:shadow-xl hover:shadow-violet-500/30"
+                className="bg-primary-600 hover:bg-primary-700 rounded-xl px-5 py-2.5 font-medium text-white transition-colors"
               >
                 Tìm
               </motion.button>
@@ -438,7 +408,7 @@ export default function ShopsPage() {
                 </span>
                 {city && (
                   <FilterTag
-                    label={`${CITY_OPTIONS.find((c) => c.value === city)?.icon ?? ''} ${CITY_OPTIONS.find((c) => c.value === city)?.label ?? city}`}
+                    label={CITY_OPTIONS.find((c) => c.value === city)?.label ?? city}
                     onRemove={() => {
                       setCity('');
                       setPage(1);
