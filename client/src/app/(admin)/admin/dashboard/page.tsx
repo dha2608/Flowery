@@ -199,15 +199,15 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
                         <td className="py-3 text-right text-gray-700">
-                          {shop.orders.toLocaleString('vi-VN')}
+                          {(shop.orders ?? 0).toLocaleString('vi-VN')}
                         </td>
                         <td className="py-3 text-right text-gray-700">
-                          {formatPrice(shop.revenue)}
+                          {formatPrice(shop.revenue ?? 0)}
                         </td>
                         <td className="py-3 text-right">
                           <span className="flex items-center justify-end gap-1 text-amber-500">
                             <Star className="h-3 w-3 fill-current" />
-                            {shop.rating.toFixed(1)}
+                            {(shop.rating ?? 0).toFixed(1)}
                           </span>
                         </td>
                       </tr>
@@ -238,15 +238,15 @@ export default function AdminDashboardPage() {
                     className="flex items-center justify-between gap-3 rounded-lg border border-gray-100 p-3"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="font-mono text-xs text-gray-500">#{order.orderNumber}</p>
+                      <p className="font-mono text-xs text-gray-500">#{order.orderNumber ?? '—'}</p>
                       <p className="truncate text-sm font-medium text-gray-900">
-                        {order.user.name}
+                        {order.user?.name ?? 'Không rõ'}
                       </p>
-                      <p className="truncate text-xs text-gray-400">{order.shop.name}</p>
+                      <p className="truncate text-xs text-gray-400">{order.shop?.name ?? '—'}</p>
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="text-sm font-semibold text-gray-900">
-                        {formatPrice(order.amount)}
+                        {formatPrice(order.amount ?? 0)}
                       </p>
                       <Badge
                         variant={STATUS_BADGE[order.status] ?? 'default'}
