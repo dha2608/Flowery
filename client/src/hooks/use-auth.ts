@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { api, ApiError } from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 
@@ -38,10 +39,18 @@ function useLogin() {
       if (res.data) {
         const { user, tokens } = res.data;
         setAuth(user, tokens.accessToken, tokens.refreshToken);
+        toast.success(`Chào mừng trở lại, ${user.name}!`, {
+          description: 'Đăng nhập thành công',
+        });
         router.push(redirectTo);
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Đăng nhập thất bại. Vui lòng thử lại.');
+      const errorMessage =
+        err instanceof ApiError ? err.message : 'Đăng nhập thất bại. Vui lòng thử lại.';
+      setError(errorMessage);
+      toast.error('Đăng nhập thất bại', {
+        description: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +72,7 @@ function useRegister() {
     password: string,
     name: string,
     phone?: string,
-    redirectTo = '/',
+    redirectTo = '/'
   ) {
     setIsLoading(true);
     setError(null);
@@ -74,10 +83,18 @@ function useRegister() {
       if (res.data) {
         const { user, tokens } = res.data;
         setAuth(user, tokens.accessToken, tokens.refreshToken);
+        toast.success(`Chào mừng ${user.name}!`, {
+          description: 'Tài khoản đã được tạo thành công',
+        });
         router.push(redirectTo);
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Đăng ký thất bại. Vui lòng thử lại.');
+      const errorMessage =
+        err instanceof ApiError ? err.message : 'Đăng ký thất bại. Vui lòng thử lại.';
+      setError(errorMessage);
+      toast.error('Đăng ký thất bại', {
+        description: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -105,6 +122,9 @@ function useLogout() {
     }
     clearAuth();
     setIsLoading(false);
+    toast.success('Đăng xuất thành công', {
+      description: 'Hẹn gặp lại bạn!',
+    });
     router.push('/login');
   }
 
@@ -125,9 +145,7 @@ function useForgotPassword() {
       await api.post<{ message: string }>('/auth/forgot-password', { email });
       return true;
     } catch (err) {
-      setError(
-        err instanceof ApiError ? err.message : 'Gửi email thất bại. Vui lòng thử lại.',
-      );
+      setError(err instanceof ApiError ? err.message : 'Gửi email thất bại. Vui lòng thử lại.');
       return false;
     } finally {
       setIsLoading(false);
@@ -152,7 +170,7 @@ function useResetPassword() {
       router.push('/login');
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.message : 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.',
+        err instanceof ApiError ? err.message : 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.'
       );
     } finally {
       setIsLoading(false);
