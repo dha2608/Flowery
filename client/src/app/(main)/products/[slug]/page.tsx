@@ -219,12 +219,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           {/* Left — Image Gallery */}
           <div>
             {/* Main image */}
-            <div className="card-base flex aspect-square items-center justify-center overflow-hidden bg-stone-50">
+            <div className="card-base relative flex aspect-square items-center justify-center overflow-hidden bg-stone-50">
               {product.images.length > 0 ? (
                 <AppImage
                   src={product.images[activeImage]?.url ?? ''}
                   alt={product.name}
-                  className="h-full w-full object-cover"
+                  className="object-cover"
                 />
               ) : (
                 <Package className="h-16 w-16 text-stone-300" />
@@ -239,13 +239,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                     key={idx}
                     onClick={() => setActiveImage(idx)}
                     className={cn(
-                      'h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all',
+                      'relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all',
                       idx === activeImage
                         ? 'border-primary-500 shadow-md'
                         : 'border-border hover:border-primary-300'
                     )}
                   >
-                    <AppImage src={img.url} alt="" className="h-full w-full object-cover" />
+                    <AppImage src={img.url} alt="" className="object-cover" />
                   </button>
                 ))}
               </div>

@@ -179,11 +179,9 @@ function SubscriptionCard({
         <div className="mb-4 flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             {shopLogo ? (
-              <AppImage
-                src={shopLogo}
-                alt={shopName}
-                className="h-10 w-10 rounded-full border border-stone-100 object-cover shadow-sm"
-              />
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-stone-100 shadow-sm">
+                <AppImage src={shopLogo} alt={shopName} className="object-cover" />
+              </div>
             ) : (
               <div className="bg-primary-50 flex h-10 w-10 items-center justify-center rounded-full">
                 <Flower2 className="text-primary-500 h-5 w-5" />

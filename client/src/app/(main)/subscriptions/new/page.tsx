@@ -61,7 +61,11 @@ const EMOTIONS = [
   { id: 'sympathetic', label: 'Đồng cảm', color: 'bg-blue-100 text-blue-800 ring-blue-200' },
   { id: 'respectful', label: 'Kính trọng', color: 'bg-purple-100 text-purple-800 ring-purple-200' },
   { id: 'apologetic', label: 'Xin lỗi', color: 'bg-orange-100 text-orange-800 ring-orange-200' },
-  { id: 'celebratory', label: 'Chúc mừng', color: 'bg-primary-100 text-primary-800 ring-primary-200' },
+  {
+    id: 'celebratory',
+    label: 'Chúc mừng',
+    color: 'bg-primary-100 text-primary-800 ring-primary-200',
+  },
   { id: 'friendly', label: 'Thân thiện', color: 'bg-teal-100 text-teal-800 ring-teal-200' },
   { id: 'passionate', label: 'Đam mê', color: 'bg-rose-100 text-rose-800 ring-rose-200' },
 ];
@@ -165,20 +169,16 @@ function StepIndicator({ current }: { current: number }) {
                     done
                       ? 'border-primary-600 bg-primary-600 text-white'
                       : active
-                        ? 'border-primary-600 bg-white text-primary-600'
-                        : 'border-stone-200 bg-white text-stone-400',
+                        ? 'border-primary-600 text-primary-600 bg-white'
+                        : 'border-stone-200 bg-white text-stone-400'
                   )}
                 >
-                  {done ? (
-                    <CheckCircle className="h-4 w-4" />
-                  ) : (
-                    <Icon className="h-4 w-4" />
-                  )}
+                  {done ? <CheckCircle className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
                 </div>
                 <span
                   className={cn(
                     'hidden text-xs font-medium sm:block',
-                    active ? 'text-primary-600' : done ? 'text-primary-500' : 'text-stone-400',
+                    active ? 'text-primary-600' : done ? 'text-primary-500' : 'text-stone-400'
                   )}
                 >
                   {step.label}
@@ -190,7 +190,7 @@ function StepIndicator({ current }: { current: number }) {
                 <div
                   className={cn(
                     'mx-2 h-0.5 flex-1 transition-colors',
-                    done ? 'bg-primary-400' : 'bg-stone-200',
+                    done ? 'bg-primary-400' : 'bg-stone-200'
                   )}
                 />
               )}
@@ -204,13 +204,7 @@ function StepIndicator({ current }: { current: number }) {
 
 // ─── Step 1: Chọn cửa hàng ───────────────────────────────────────────────────
 
-function Step1Shops({
-  form,
-  onChange,
-}: {
-  form: FormState;
-  onChange: (shopId: string) => void;
-}) {
+function Step1Shops({ form, onChange }: { form: FormState; onChange: (shopId: string) => void }) {
   const { data, isLoading, isError } = useShops({ limit: 20 });
   const shops = data?.shops ?? [];
 
@@ -242,14 +236,14 @@ function Step1Shops({
             onClick={() => onChange(shop._id)}
             className={cn(
               'group relative rounded-xl border-2 bg-white text-left transition-all',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2',
+              'focus-visible:ring-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
               selected
-                ? 'border-primary-500 shadow-md shadow-primary-100'
-                : 'border-stone-200 hover:border-primary-300 hover:shadow-sm',
+                ? 'border-primary-500 shadow-primary-100 shadow-md'
+                : 'hover:border-primary-300 border-stone-200 hover:shadow-sm'
             )}
           >
             {selected && (
-              <span className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary-500">
+              <span className="bg-primary-500 absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full">
                 <CheckCircle className="h-3.5 w-3.5 text-white" />
               </span>
             )}
@@ -257,11 +251,9 @@ function Step1Shops({
             <div className="p-4">
               {/* Logo + name */}
               <div className="mb-3 flex items-center gap-3">
-                <AppImage
-                  src={shop.logo?.url}
-                  alt={shop.name}
-                  className="h-12 w-12 rounded-full border border-stone-100 object-cover shadow-sm"
-                />
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-stone-100 shadow-sm">
+                  <AppImage src={shop.logo?.url} alt={shop.name} className="object-cover" />
+                </div>
                 <div className="min-w-0">
                   <p className="truncate font-semibold text-stone-900">{shop.name}</p>
                   {shop.isVerified && (
@@ -274,7 +266,7 @@ function Step1Shops({
 
               {/* Address */}
               <div className="mb-2 flex items-start gap-1.5 text-xs text-stone-500">
-                <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-400" />
+                <MapPin className="text-primary-400 mt-0.5 h-3.5 w-3.5 shrink-0" />
                 <span className="line-clamp-2">
                   {shop.address.street}, {shop.address.ward}, {shop.address.district},{' '}
                   {shop.address.city}
@@ -289,15 +281,15 @@ function Step1Shops({
                   <span className="text-stone-400">({shop.stats.totalReviews})</span>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-stone-500">
-                  <Truck className="h-3.5 w-3.5 text-primary-400" />
+                  <Truck className="text-primary-400 h-3.5 w-3.5" />
                   <span>{shop.deliveryConfig.estimatedTime}</span>
                 </div>
               </div>
 
               {/* Delivery fee */}
-              <div className="mt-2 rounded-lg bg-primary-50 px-2.5 py-1.5 text-xs text-stone-600">
+              <div className="bg-primary-50 mt-2 rounded-lg px-2.5 py-1.5 text-xs text-stone-600">
                 Phí giao:{' '}
-                <span className="font-medium text-primary-600">
+                <span className="text-primary-600 font-medium">
                   {formatPrice(shop.deliveryConfig.baseFee)}
                 </span>
                 {shop.deliveryConfig.freeAboveAmount > 0 && (
@@ -349,20 +341,20 @@ function Step2Plans({
             onClick={() => onChange(planType)}
             className={cn(
               'relative flex flex-col overflow-hidden rounded-xl border-2 text-left transition-all',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2',
+              'focus-visible:ring-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
               selected
-                ? 'border-primary-500 shadow-lg shadow-primary-100'
-                : 'border-stone-200 hover:border-primary-300',
+                ? 'border-primary-500 shadow-primary-100 shadow-lg'
+                : 'hover:border-primary-300 border-stone-200'
             )}
           >
             {isPopular && !selected && (
-              <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2 py-0.5 text-xs font-semibold text-stone-700 ring-1 ring-stone-200 backdrop-blur-sm">
+              <span className="absolute top-3 right-3 rounded-full bg-white/90 px-2 py-0.5 text-xs font-semibold text-stone-700 ring-1 ring-stone-200 backdrop-blur-sm">
                 Phổ biến
               </span>
             )}
             {selected && (
-              <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm">
-                <CheckCircle className="h-4 w-4 text-primary-500" />
+              <span className="absolute top-3 right-3 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm">
+                <CheckCircle className="text-primary-500 h-4 w-4" />
               </span>
             )}
 
@@ -433,9 +425,7 @@ function Step3Preferences({
     <div className="space-y-8">
       {/* Budget */}
       <section>
-        <h3 className="mb-4 text-sm font-semibold text-stone-900">
-          Ngân sách (VNĐ / lần giao)
-        </h3>
+        <h3 className="mb-4 text-sm font-semibold text-stone-900">Ngân sách (VNĐ / lần giao)</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="mb-1.5 block text-xs font-medium text-stone-600">Tối thiểu</label>
@@ -450,10 +440,12 @@ function Step3Preferences({
               }}
               className={cn(
                 'w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900',
-                'focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100',
+                'focus:border-primary-400 focus:ring-primary-100 focus:ring-2 focus:outline-none'
               )}
             />
-            <p className="mt-1 text-xs font-medium text-primary-600">{formatPrice(pref.budgetMin)}</p>
+            <p className="text-primary-600 mt-1 text-xs font-medium">
+              {formatPrice(pref.budgetMin)}
+            </p>
           </div>
           <div>
             <label className="mb-1.5 block text-xs font-medium text-stone-600">Tối đa</label>
@@ -468,15 +460,17 @@ function Step3Preferences({
               }}
               className={cn(
                 'w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900',
-                'focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100',
+                'focus:border-primary-400 focus:ring-primary-100 focus:ring-2 focus:outline-none'
               )}
             />
-            <p className="mt-1 text-xs font-medium text-primary-600">{formatPrice(pref.budgetMax)}</p>
+            <p className="text-primary-600 mt-1 text-xs font-medium">
+              {formatPrice(pref.budgetMax)}
+            </p>
           </div>
         </div>
-        <div className="mt-4 rounded-xl bg-primary-50 px-4 py-3 text-sm text-stone-700">
+        <div className="bg-primary-50 mt-4 rounded-xl px-4 py-3 text-sm text-stone-700">
           Khoảng ngân sách:{' '}
-          <span className="font-semibold text-primary-600">
+          <span className="text-primary-600 font-semibold">
             {formatPrice(pref.budgetMin)} – {formatPrice(pref.budgetMax)}
           </span>
         </div>
@@ -485,8 +479,7 @@ function Step3Preferences({
       {/* Emotions */}
       <section>
         <h3 className="mb-1.5 text-sm font-semibold text-stone-900">
-          Cảm xúc muốn gửi gắm{' '}
-          <span className="font-normal text-stone-400">(chọn nhiều)</span>
+          Cảm xúc muốn gửi gắm <span className="font-normal text-stone-400">(chọn nhiều)</span>
         </h3>
         <p className="mb-3 text-xs text-stone-500">
           Chúng tôi sẽ chọn hoa phù hợp với cảm xúc bạn muốn truyền đạt.
@@ -501,10 +494,10 @@ function Step3Preferences({
                 onClick={() => toggleEmotion(emotion.id)}
                 className={cn(
                   'rounded-full px-3.5 py-1.5 text-sm font-medium ring-1 transition-all',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-1',
+                  'focus-visible:ring-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
                   selected
-                    ? cn(emotion.color, 'ring-current shadow-sm scale-105')
-                    : 'bg-stone-50 text-stone-600 ring-stone-200 hover:bg-stone-100',
+                    ? cn(emotion.color, 'scale-105 shadow-sm ring-current')
+                    : 'bg-stone-50 text-stone-600 ring-stone-200 hover:bg-stone-100'
                 )}
               >
                 {emotion.label}
@@ -517,8 +510,7 @@ function Step3Preferences({
       {/* Colors */}
       <section>
         <h3 className="mb-1.5 text-sm font-semibold text-stone-900">
-          Màu sắc yêu thích{' '}
-          <span className="font-normal text-stone-400">(chọn nhiều)</span>
+          Màu sắc yêu thích <span className="font-normal text-stone-400">(chọn nhiều)</span>
         </h3>
         <div className="flex flex-wrap gap-3">
           {COLORS.map((color) => {
@@ -530,21 +522,21 @@ function Step3Preferences({
                 onClick={() => toggleColor(color.id)}
                 className={cn(
                   'flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium ring-1 transition-all',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-1',
+                  'focus-visible:ring-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
                   selected
-                    ? 'bg-stone-900 text-white ring-stone-900 shadow-md scale-105'
-                    : 'bg-white text-stone-700 ring-stone-200 hover:ring-stone-300',
+                    ? 'scale-105 bg-stone-900 text-white shadow-md ring-stone-900'
+                    : 'bg-white text-stone-700 ring-stone-200 hover:ring-stone-300'
                 )}
               >
                 <span
                   className={cn(
                     'h-4 w-4 rounded-full',
-                    color.border ? 'border border-stone-300' : '',
+                    color.border ? 'border border-stone-300' : ''
                   )}
                   style={{ backgroundColor: color.hex }}
                 />
                 {color.label}
-                {selected && <CheckCircle className="h-3.5 w-3.5 text-primary-400" />}
+                {selected && <CheckCircle className="text-primary-400 h-3.5 w-3.5" />}
               </button>
             );
           })}
@@ -554,8 +546,7 @@ function Step3Preferences({
       {/* Exclude flowers */}
       <section>
         <h3 className="mb-1.5 text-sm font-semibold text-stone-900">
-          Hoa không muốn nhận{' '}
-          <span className="font-normal text-stone-400">(không bắt buộc)</span>
+          Hoa không muốn nhận <span className="font-normal text-stone-400">(không bắt buộc)</span>
         </h3>
         <div className="flex gap-2">
           <input
@@ -571,7 +562,7 @@ function Step3Preferences({
             placeholder="Nhập tên hoa rồi nhấn Enter hoặc Thêm..."
             className={cn(
               'flex-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900',
-              'placeholder:text-stone-400 focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100',
+              'focus:border-primary-400 focus:ring-primary-100 placeholder:text-stone-400 focus:ring-2 focus:outline-none'
             )}
           />
           <Button
@@ -596,7 +587,7 @@ function Step3Preferences({
                 <button
                   type="button"
                   onClick={() => removeExcludeFlower(flower)}
-                  className="rounded-full p-0.5 hover:bg-red-100 transition-colors"
+                  className="rounded-full p-0.5 transition-colors hover:bg-red-100"
                   aria-label={`Xóa ${flower}`}
                 >
                   <X className="h-3 w-3" />
@@ -702,11 +693,11 @@ function Step4Delivery({
         />
       </div>
 
-      <div className="flex items-start gap-2 rounded-xl bg-primary-50 p-4 text-sm text-primary-800">
-        <Truck className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
+      <div className="bg-primary-50 text-primary-800 flex items-start gap-2 rounded-xl p-4 text-sm">
+        <Truck className="text-primary-500 mt-0.5 h-4 w-4 shrink-0" />
         <p>
-          Địa chỉ này sẽ được sử dụng cho tất cả các lần giao hàng định kỳ. Bạn có thể thay đổi
-          sau trong phần quản lý đăng ký.
+          Địa chỉ này sẽ được sử dụng cho tất cả các lần giao hàng định kỳ. Bạn có thể thay đổi sau
+          trong phần quản lý đăng ký.
         </p>
       </div>
     </div>
@@ -740,20 +731,18 @@ function Step5Confirm({
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Shop */}
         <Card>
-          <CardHeader className="pb-2 pt-4">
+          <CardHeader className="pt-4 pb-2">
             <CardTitle className="flex items-center gap-2 text-sm">
-              <Store className="h-4 w-4 text-primary-500" />
+              <Store className="text-primary-500 h-4 w-4" />
               Cửa hàng
             </CardTitle>
           </CardHeader>
-          <CardContent className="pb-4 pt-0">
+          <CardContent className="pt-0 pb-4">
             {shop ? (
               <div className="flex items-center gap-2.5">
-                <AppImage
-                  src={shop.logo?.url}
-                  alt={shop.name}
-                  className="h-10 w-10 rounded-full border border-stone-100 object-cover"
-                />
+                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-stone-100">
+                  <AppImage src={shop.logo?.url} alt={shop.name} className="object-cover" />
+                </div>
                 <span className="font-medium text-stone-900">{shop.name}</span>
               </div>
             ) : (
@@ -764,19 +753,19 @@ function Step5Confirm({
 
         {/* Plan */}
         <Card>
-          <CardHeader className="pb-2 pt-4">
+          <CardHeader className="pt-4 pb-2">
             <CardTitle className="flex items-center gap-2 text-sm">
-              <CalendarDays className="h-4 w-4 text-primary-500" />
+              <CalendarDays className="text-primary-500 h-4 w-4" />
               Gói đăng ký
             </CardTitle>
           </CardHeader>
-          <CardContent className="pb-4 pt-0">
+          <CardContent className="pt-0 pb-4">
             {plan ? (
               <div>
                 <p className="font-medium text-stone-900">
                   {PLAN_LABELS[form.planType as SubscriptionPlanType] ?? plan.name}
                 </p>
-                <p className="text-sm text-primary-600">{formatPrice(plan.price)} / lần giao</p>
+                <p className="text-primary-600 text-sm">{formatPrice(plan.price)} / lần giao</p>
               </div>
             ) : (
               <p className="text-sm text-stone-400">Chưa chọn</p>
@@ -786,16 +775,16 @@ function Step5Confirm({
 
         {/* Preferences */}
         <Card className="sm:col-span-2">
-          <CardHeader className="pb-2 pt-4">
+          <CardHeader className="pt-4 pb-2">
             <CardTitle className="flex items-center gap-2 text-sm">
-              <Heart className="h-4 w-4 text-primary-500" />
+              <Heart className="text-primary-500 h-4 w-4" />
               Sở thích
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 pb-4 pt-0 text-sm">
+          <CardContent className="space-y-3 pt-0 pb-4 text-sm">
             <div className="flex justify-between">
               <span className="text-stone-500">Ngân sách:</span>
-              <span className="font-medium text-primary-600">
+              <span className="text-primary-600 font-medium">
                 {formatPrice(pref.budgetMin)} – {formatPrice(pref.budgetMax)}
               </span>
             </div>
@@ -809,7 +798,7 @@ function Step5Confirm({
                       key={e.id}
                       className={cn(
                         'rounded-full px-2.5 py-0.5 text-xs font-medium ring-1',
-                        e.color,
+                        e.color
                       )}
                     >
                       {e.label}
@@ -829,7 +818,10 @@ function Step5Confirm({
                       className="flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-medium text-stone-700"
                     >
                       <span
-                        className={cn('h-3 w-3 rounded-full', c.border ? 'border border-stone-300' : '')}
+                        className={cn(
+                          'h-3 w-3 rounded-full',
+                          c.border ? 'border border-stone-300' : ''
+                        )}
                         style={{ backgroundColor: c.hex }}
                       />
                       {c.label}
@@ -842,9 +834,7 @@ function Step5Confirm({
             {pref.excludeFlowers.length > 0 && (
               <div className="flex items-center gap-2 text-xs text-stone-500">
                 <span>Không dùng:</span>
-                <span className="font-medium text-red-600">
-                  {pref.excludeFlowers.join(', ')}
-                </span>
+                <span className="font-medium text-red-600">{pref.excludeFlowers.join(', ')}</span>
               </div>
             )}
 
@@ -859,13 +849,13 @@ function Step5Confirm({
 
         {/* Delivery address */}
         <Card className="sm:col-span-2">
-          <CardHeader className="pb-2 pt-4">
+          <CardHeader className="pt-4 pb-2">
             <CardTitle className="flex items-center gap-2 text-sm">
-              <Home className="h-4 w-4 text-primary-500" />
+              <Home className="text-primary-500 h-4 w-4" />
               Địa chỉ giao hàng
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-1 pb-4 pt-0 text-sm">
+          <CardContent className="space-y-1 pt-0 pb-4 text-sm">
             <p className="font-medium text-stone-900">{d.recipientName}</p>
             <p className="text-stone-500">{d.recipientPhone}</p>
             <p className="text-stone-700">
@@ -877,9 +867,7 @@ function Step5Confirm({
 
       {/* Payment method */}
       <section>
-        <h3 className="mb-3 text-sm font-semibold text-stone-900">
-          Phương thức thanh toán
-        </h3>
+        <h3 className="mb-3 text-sm font-semibold text-stone-900">Phương thức thanh toán</h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {PAYMENT_METHODS.map((method) => {
             const selected = form.paymentMethod === method.id;
@@ -890,24 +878,29 @@ function Step5Confirm({
                 onClick={() => onPaymentChange(method.id)}
                 className={cn(
                   'flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition-all',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2',
+                  'focus-visible:ring-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
                   selected
                     ? 'border-primary-500 bg-primary-50 shadow-sm'
-                    : 'border-stone-200 bg-white hover:border-primary-200',
+                    : 'hover:border-primary-200 border-stone-200 bg-white'
                 )}
               >
-                <span className={cn('transition-colors', selected ? 'text-primary-600' : 'text-stone-400')}>
+                <span
+                  className={cn(
+                    'transition-colors',
+                    selected ? 'text-primary-600' : 'text-stone-400'
+                  )}
+                >
                   {method.icon}
                 </span>
                 <span
                   className={cn(
-                    'text-xs font-medium text-center',
-                    selected ? 'text-primary-700' : 'text-stone-600',
+                    'text-center text-xs font-medium',
+                    selected ? 'text-primary-700' : 'text-stone-600'
                   )}
                 >
                   {method.label}
                 </span>
-                {selected && <CheckCircle className="h-4 w-4 text-primary-500" />}
+                {selected && <CheckCircle className="text-primary-500 h-4 w-4" />}
               </button>
             );
           })}
@@ -1070,11 +1063,10 @@ export default function NewSubscriptionPage() {
           router.push('/subscriptions');
         },
         onError: (err) => {
-          const message =
-            err instanceof Error ? err.message : 'Có lỗi xảy ra. Vui lòng thử lại.';
+          const message = err instanceof Error ? err.message : 'Có lỗi xảy ra. Vui lòng thử lại.';
           toast.error(message);
         },
-      },
+      }
     );
   };
 
@@ -1119,25 +1111,29 @@ export default function NewSubscriptionPage() {
     <Container className="py-8 pb-20">
       {/* Page header */}
       <div className="mb-6">
-        <div className="flex items-center gap-2 text-sm text-stone-500 mb-2">
+        <div className="mb-2 flex items-center gap-2 text-sm text-stone-500">
           <button
             type="button"
             onClick={() => router.push('/subscriptions')}
-            className="flex items-center gap-1 hover:text-primary-600 transition-colors"
+            className="hover:text-primary-600 flex items-center gap-1 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
             Đăng ký định kỳ
           </button>
           <span>/</span>
-          <span className="text-stone-900 font-medium">Tạo đăng ký mới</span>
+          <span className="font-medium text-stone-900">Tạo đăng ký mới</span>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600">
+          <div className="bg-primary-600 flex h-10 w-10 items-center justify-center rounded-xl">
             <Flower2 className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="font-serif text-2xl font-bold text-stone-900">Đăng ký hoa định kỳ mới</h1>
-            <p className="text-sm text-stone-500">Nhận hoa tươi theo lịch cố định, không cần lo lắng.</p>
+            <h1 className="font-serif text-2xl font-bold text-stone-900">
+              Đăng ký hoa định kỳ mới
+            </h1>
+            <p className="text-sm text-stone-500">
+              Nhận hoa tươi theo lịch cố định, không cần lo lắng.
+            </p>
           </div>
         </div>
       </div>
@@ -1150,12 +1146,12 @@ export default function NewSubscriptionPage() {
         {/* Step header */}
         <div className="border-b border-stone-100 bg-stone-50 px-6 py-5">
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white">
+            <span className="bg-primary-600 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white">
               {currentStep}
             </span>
             <h2 className="font-serif text-lg font-semibold text-stone-900">{title}</h2>
           </div>
-          <p className="mt-1 text-sm text-stone-500 pl-8">{description}</p>
+          <p className="mt-1 pl-8 text-sm text-stone-500">{description}</p>
         </div>
 
         {/* Step body */}
@@ -1174,9 +1170,7 @@ export default function NewSubscriptionPage() {
             />
           )}
 
-          {currentStep === 3 && (
-            <Step3Preferences form={form} onChange={updatePreferences} />
-          )}
+          {currentStep === 3 && <Step3Preferences form={form} onChange={updatePreferences} />}
 
           {currentStep === 4 && (
             <Step4Delivery form={form} errors={deliveryErrors} onChange={updateDelivery} />
@@ -1185,9 +1179,7 @@ export default function NewSubscriptionPage() {
           {currentStep === 5 && (
             <Step5Confirm
               form={form}
-              onPaymentChange={(method) =>
-                setForm((prev) => ({ ...prev, paymentMethod: method }))
-              }
+              onPaymentChange={(method) => setForm((prev) => ({ ...prev, paymentMethod: method }))}
               shops={shops}
               plans={plans}
             />
@@ -1213,20 +1205,17 @@ export default function NewSubscriptionPage() {
                 className={cn(
                   'h-2 rounded-full transition-all',
                   step.id === currentStep
-                    ? 'w-6 bg-primary-500'
+                    ? 'bg-primary-500 w-6'
                     : step.id < currentStep
-                      ? 'w-2 bg-primary-300'
-                      : 'w-2 bg-stone-200',
+                      ? 'bg-primary-300 w-2'
+                      : 'w-2 bg-stone-200'
                 )}
               />
             ))}
           </div>
 
           {currentStep < STEPS.length ? (
-            <Button
-              onClick={handleNext}
-              rightIcon={<ChevronRight className="h-4 w-4" />}
-            >
+            <Button onClick={handleNext} rightIcon={<ChevronRight className="h-4 w-4" />}>
               Tiếp theo
             </Button>
           ) : (

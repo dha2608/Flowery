@@ -19,7 +19,7 @@ function StarRow({ rating, max = 5 }: { rating: number; max?: number }) {
           key={i}
           className={cn(
             'h-3.5 w-3.5',
-            i < rating ? 'fill-amber-400 text-amber-400' : 'fill-gray-200 text-gray-200',
+            i < rating ? 'fill-amber-400 text-amber-400' : 'fill-gray-200 text-gray-200'
           )}
         />
       ))}
@@ -41,16 +41,16 @@ function RatingSummary({ reviews }: { reviews: ShopReview[] }) {
   }));
 
   return (
-    <div className="rounded-xl border border-gray-100 bg-white shadow-sm p-6 flex flex-col sm:flex-row gap-6 items-center">
+    <div className="flex flex-col items-center gap-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm sm:flex-row">
       {/* Average */}
-      <div className="flex flex-col items-center gap-1 shrink-0">
+      <div className="flex shrink-0 flex-col items-center gap-1">
         <p className="text-5xl font-bold text-gray-900">{avg.toFixed(1)}</p>
         <StarRow rating={Math.round(avg)} />
-        <p className="text-xs text-gray-400 mt-1">{reviews.length} đánh giá</p>
+        <p className="mt-1 text-xs text-gray-400">{reviews.length} đánh giá</p>
       </div>
 
       {/* Bar breakdown */}
-      <div className="flex-1 w-full space-y-2 min-w-0">
+      <div className="w-full min-w-0 flex-1 space-y-2">
         {counts.map(({ star, count }) => {
           const pct = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
           return (
@@ -58,7 +58,7 @@ function RatingSummary({ reviews }: { reviews: ShopReview[] }) {
               <span className="w-10 shrink-0 text-right text-xs font-medium text-gray-600">
                 {star} ★
               </span>
-              <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-100">
                 <div
                   className="h-full rounded-full bg-amber-400 transition-all"
                   style={{ width: `${pct}%` }}
@@ -97,11 +97,7 @@ function ReviewCard({ review }: { review: ShopReview }) {
       <CardContent className="space-y-4 py-5">
         {/* Header: avatar + name + rating + date */}
         <div className="flex items-start gap-3">
-          <Avatar
-            src={review.userId.avatar?.url}
-            name={review.userId.name}
-            size="md"
-          />
+          <Avatar src={review.userId.avatar?.url} name={review.userId.name} size="md" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <p className="font-medium text-gray-900">{review.userId.name}</p>
@@ -116,41 +112,37 @@ function ReviewCard({ review }: { review: ShopReview }) {
               <span className="text-xs text-gray-400">{formatDate(review.createdAt)}</span>
             </div>
             {review.productId && (
-              <p className="mt-0.5 text-xs text-gray-400">
-                Sản phẩm: {review.productId.name}
-              </p>
+              <p className="mt-0.5 text-xs text-gray-400">Sản phẩm: {review.productId.name}</p>
             )}
           </div>
         </div>
 
         {/* Comment */}
         {review.comment && (
-          <p className="text-sm text-gray-700 leading-relaxed">{review.comment}</p>
+          <p className="text-sm leading-relaxed text-gray-700">{review.comment}</p>
         )}
 
         {/* Review images */}
         {review.images && review.images.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {review.images.map((img, idx) => (
-              <AppImage
+              <div
                 key={idx}
-                src={img.url}
-                alt={`Ảnh đánh giá ${idx + 1}`}
-                className="h-20 w-20 rounded-lg object-cover border border-gray-100"
-              />
+                className="relative h-20 w-20 overflow-hidden rounded-lg border border-gray-100"
+              >
+                <AppImage src={img.url} alt={`Ảnh đánh giá ${idx + 1}`} className="object-cover" />
+              </div>
             ))}
           </div>
         )}
 
         {/* Shop reply */}
         {review.reply ? (
-          <div className="rounded-lg bg-rose-50 border border-rose-100 px-4 py-3 space-y-1">
+          <div className="space-y-1 rounded-lg border border-rose-100 bg-rose-50 px-4 py-3">
             <div className="flex items-center gap-1.5">
               <MessageSquare className="h-3.5 w-3.5 text-rose-500" />
               <p className="text-xs font-semibold text-rose-600">Phản hồi của cửa hàng</p>
-              <span className="text-xs text-gray-400">
-                · {formatDate(review.reply.repliedAt)}
-              </span>
+              <span className="text-xs text-gray-400">· {formatDate(review.reply.repliedAt)}</span>
             </div>
             <p className="text-sm text-gray-700">{review.reply.content}</p>
           </div>
@@ -168,7 +160,7 @@ function ReviewCard({ review }: { review: ShopReview }) {
                 <div className="flex items-center gap-2">
                   <Button
                     size="sm"
-                    className="bg-rose-500 hover:bg-rose-600 text-white"
+                    className="bg-rose-500 text-white hover:bg-rose-600"
                     isLoading={replyMutation.isPending}
                     onClick={handleReply}
                     disabled={!replyText.trim()}
@@ -230,7 +222,7 @@ export default function ShopReviewsPage() {
           <Spinner size="lg" label="Đang tải đánh giá..." />
         </div>
       ) : reviews.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-16 text-center rounded-xl border border-gray-100 bg-white shadow-sm">
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-gray-100 bg-white py-16 text-center shadow-sm">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-50">
             <Star className="h-6 w-6 text-amber-300" />
           </div>

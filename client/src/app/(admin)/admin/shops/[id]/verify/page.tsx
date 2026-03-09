@@ -145,11 +145,9 @@ export default function AdminShopVerifyPage() {
       <Section icon={<FileText className="h-5 w-5" />} title="Thông tin cửa hàng">
         {shop.logo?.url && (
           <div className="mb-4">
-            <AppImage
-              src={shop.logo.url}
-              alt={shop.name}
-              className="h-20 w-20 rounded-xl border border-gray-200 object-cover"
-            />
+            <div className="relative h-20 w-20 overflow-hidden rounded-xl border border-gray-200">
+              <AppImage src={shop.logo.url} alt={shop.name} className="object-cover" />
+            </div>
           </div>
         )}
         <InfoRow label="Tên cửa hàng" value={shop.name} />

@@ -35,7 +35,7 @@ export function Header() {
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuthStore();
   const cartCount = useCartStore((state) =>
-    state.items.reduce((sum, item) => sum + item.quantity, 0),
+    state.items.reduce((sum, item) => sum + item.quantity, 0)
   );
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -95,40 +95,37 @@ export function Header() {
         className={cn(
           'sticky top-0 z-50 transition-all duration-300',
           scrolled
-            ? 'bg-white/80 backdrop-blur-xl border-b border-stone-200/50 shadow-sm'
+            ? 'border-b border-stone-200/50 bg-white/80 shadow-sm backdrop-blur-xl'
             : 'bg-transparent'
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link
               href="/"
-              className="font-serif font-semibold text-xl text-stone-900 shrink-0 hover:text-primary-600 transition-colors"
+              className="hover:text-primary-600 shrink-0 font-serif text-xl font-semibold text-stone-900 transition-colors"
             >
-              <span className="inline-block">
-                🌸 Flowery
-              </span>
+              <span className="inline-block">🌸 Flowery</span>
             </Link>
 
             {/* Desktop navigation */}
-            <nav className="hidden md:flex items-center gap-1" aria-label="Điều hướng chính">
+            <nav className="hidden items-center gap-1 md:flex" aria-label="Điều hướng chính">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    'relative px-4 py-2 text-sm font-medium transition-colors rounded-full',
+                    'relative rounded-full px-4 py-2 text-sm font-medium transition-colors',
                     pathname === link.href
                       ? 'text-primary-600'
-                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100/60',
+                      : 'text-stone-600 hover:bg-stone-100/60 hover:text-stone-900'
                   )}
                 >
                   {link.label}
                   {pathname === link.href && (
                     <motion.div
-                      className="absolute inset-0 bg-primary-50 rounded-full -z-10"
+                      className="bg-primary-50 absolute inset-0 -z-10 rounded-full"
                       layoutId="nav-pill"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
@@ -139,15 +136,24 @@ export function Header() {
 
             {/* Right side controls */}
             <div className="flex items-center gap-1">
-
               {/* Search icon */}
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Tìm kiếm"
-                className="p-2.5 text-stone-500 hover:text-stone-900 hover:bg-stone-100/60 rounded-full transition-all duration-200"
+                className="rounded-full p-2.5 text-stone-500 transition-all duration-200 hover:bg-stone-100/60 hover:text-stone-900"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.75}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
                 </svg>
               </button>
 
@@ -156,9 +162,15 @@ export function Header() {
                 <Link
                   href="/notifications"
                   aria-label="Thông báo"
-                  className="relative p-2.5 text-stone-500 hover:text-stone-900 hover:bg-stone-100/60 rounded-full transition-all duration-200 block"
+                  className="relative block rounded-full p-2.5 text-stone-500 transition-all duration-200 hover:bg-stone-100/60 hover:text-stone-900"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -172,9 +184,15 @@ export function Header() {
               <Link
                 href="/cart"
                 aria-label="Giỏ hàng"
-                className="relative p-2.5 text-stone-500 hover:text-stone-900 hover:bg-stone-100/60 rounded-full transition-all duration-200 block"
+                className="relative block rounded-full p-2.5 text-stone-500 transition-all duration-200 hover:bg-stone-100/60 hover:text-stone-900"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -187,7 +205,7 @@ export function Header() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className="absolute -top-0.5 -right-0.5 min-w-[1.1rem] h-[1.1rem] bg-gradient-to-r from-primary-500 to-primary-600 text-white text-[10px] leading-none rounded-full flex items-center justify-center font-semibold px-0.5 shadow-lg shadow-primary-500/30"
+                      className="from-primary-500 to-primary-600 shadow-primary-500/30 absolute -top-0.5 -right-0.5 flex h-[1.1rem] min-w-[1.1rem] items-center justify-center rounded-full bg-gradient-to-r px-0.5 text-[10px] leading-none font-semibold text-white shadow-lg"
                     >
                       {cartCount > 99 ? '99+' : cartCount}
                     </motion.span>
@@ -197,31 +215,37 @@ export function Header() {
 
               {/* Desktop: authenticated avatar dropdown */}
               {isAuthenticated && user ? (
-                <div className="relative hidden md:block ml-1" ref={dropdownRef}>
+                <div className="relative ml-1 hidden md:block" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen((v) => !v)}
-                    className="flex items-center gap-1.5 p-1 rounded-full hover:bg-stone-100/60 transition-all duration-200"
+                    className="flex items-center gap-1.5 rounded-full p-1 transition-all duration-200 hover:bg-stone-100/60"
                     aria-expanded={dropdownOpen}
                     aria-haspopup="true"
                   >
                     {user.avatar?.url ? (
-                      <AppImage
-                        src={user.avatar.url}
-                        alt={user.name}
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-primary-100"
-                      />
+                      <div className="ring-primary-100 relative h-8 w-8 overflow-hidden rounded-full ring-2">
+                        <AppImage src={user.avatar.url} alt={user.name} className="object-cover" />
+                      </div>
                     ) : (
-                      <span className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm select-none shadow-lg shadow-primary-500/30">
+                      <span className="from-primary-400 to-primary-600 shadow-primary-500/30 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br text-sm font-semibold text-white shadow-lg select-none">
                         {avatarFallback}
                       </span>
                     )}
                     <svg
-                      className={cn('w-3.5 h-3.5 text-stone-400 transition-transform duration-200', dropdownOpen && 'rotate-180')}
+                      className={cn(
+                        'h-3.5 w-3.5 text-stone-400 transition-transform duration-200',
+                        dropdownOpen && 'rotate-180'
+                      )}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
 
@@ -232,18 +256,18 @@ export function Header() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                        className="absolute right-0 mt-2 w-56 bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-stone-200/50 py-2 z-50 overflow-hidden"
+                        className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-stone-200/50 bg-white/90 py-2 shadow-xl backdrop-blur-xl"
                       >
                         {/* User info */}
-                        <div className="px-4 py-3 border-b border-stone-100 bg-gradient-to-r from-primary-50/50 to-transparent">
-                          <p className="text-sm font-medium text-stone-900 truncate">{user.name}</p>
-                          <p className="text-xs text-stone-500 truncate mt-0.5">{user.email}</p>
+                        <div className="from-primary-50/50 border-b border-stone-100 bg-gradient-to-r to-transparent px-4 py-3">
+                          <p className="truncate text-sm font-medium text-stone-900">{user.name}</p>
+                          <p className="mt-0.5 truncate text-xs text-stone-500">{user.email}</p>
                         </div>
                         {/* Role-specific portal links */}
                         {user.role === 'shop_owner' && (
                           <Link
                             href="/shop/dashboard"
-                            className="flex items-center px-4 py-2.5 text-sm font-medium text-primary-600 hover:bg-primary-50/50 transition-colors"
+                            className="text-primary-600 hover:bg-primary-50/50 flex items-center px-4 py-2.5 text-sm font-medium transition-colors"
                             onClick={() => setDropdownOpen(false)}
                           >
                             <span className="mr-2">🏪</span>
@@ -253,7 +277,7 @@ export function Header() {
                         {user.role === 'admin' && (
                           <Link
                             href="/admin/dashboard"
-                            className="flex items-center px-4 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+                            className="flex items-center px-4 py-2.5 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
                             onClick={() => setDropdownOpen(false)}
                           >
                             <span className="mr-2">⚙️</span>
@@ -266,7 +290,7 @@ export function Header() {
                             <Link
                               key={link.href}
                               href={link.href}
-                              className="flex items-center px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50/50 hover:text-stone-900 transition-colors"
+                              className="flex items-center px-4 py-2.5 text-sm text-stone-600 transition-colors hover:bg-stone-50/50 hover:text-stone-900"
                               onClick={() => setDropdownOpen(false)}
                             >
                               {link.label}
@@ -274,10 +298,10 @@ export function Header() {
                           ))}
                         </div>
                         {/* Logout */}
-                        <div className="border-t border-stone-100 mt-1 pt-1">
+                        <div className="mt-1 border-t border-stone-100 pt-1">
                           <button
                             onClick={handleLogout}
-                            className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50/50 transition-colors"
+                            className="w-full px-4 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50/50"
                           >
                             Đăng xuất
                           </button>
@@ -288,16 +312,16 @@ export function Header() {
                 </div>
               ) : (
                 /* Desktop: unauthenticated actions */
-                <div className="hidden md:flex items-center gap-2 ml-2">
+                <div className="ml-2 hidden items-center gap-2 md:flex">
                   <Link
                     href="/login"
-                    className="px-4 py-2 text-sm font-medium text-stone-700 hover:text-primary-600 transition-colors"
+                    className="hover:text-primary-600 px-4 py-2 text-sm font-medium text-stone-700 transition-colors"
                   >
                     Đăng nhập
                   </Link>
                   <Link
                     href="/register"
-                    className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-500 to-primary-600 rounded-full hover:shadow-lg hover:shadow-primary-500/25 hover:brightness-105 transition-all duration-200"
+                    className="from-primary-500 to-primary-600 hover:shadow-primary-500/25 rounded-full bg-gradient-to-r px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:shadow-lg hover:brightness-105"
                   >
                     Đăng ký
                   </Link>
@@ -307,12 +331,17 @@ export function Header() {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setMobileOpen((v) => !v)}
-                className="md:hidden p-2.5 text-stone-600 hover:text-stone-900 hover:bg-stone-100/60 rounded-full transition-all duration-200"
+                className="rounded-full p-2.5 text-stone-600 transition-all duration-200 hover:bg-stone-100/60 hover:text-stone-900 md:hidden"
                 aria-label="Mở menu"
                 aria-expanded={mobileOpen}
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               </button>
             </div>
@@ -342,36 +371,40 @@ export function Header() {
         role="dialog"
         aria-modal="true"
         aria-label="Menu điều hướng"
-        className="fixed top-0 right-0 z-[56] h-full w-[300px] max-w-[85vw] bg-white/95 backdrop-blur-xl shadow-2xl flex flex-col md:hidden"
+        className="fixed top-0 right-0 z-[56] flex h-full w-[300px] max-w-[85vw] flex-col bg-white/95 shadow-2xl backdrop-blur-xl md:hidden"
         initial={{ x: '100%' }}
         animate={{ x: mobileOpen ? 0 : '100%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
         {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 h-16 border-b border-stone-200/50 shrink-0 bg-gradient-to-r from-primary-50/30 to-transparent">
+        <div className="from-primary-50/30 flex h-16 shrink-0 items-center justify-between border-b border-stone-200/50 bg-gradient-to-r to-transparent px-5">
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="font-serif font-semibold text-lg text-stone-900"
+            className="font-serif text-lg font-semibold text-stone-900"
           >
             🌸 Flowery
           </Link>
           <motion.button
             onClick={() => setMobileOpen(false)}
             aria-label="Đóng menu"
-            className="p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-100/60 rounded-full transition-all duration-200"
+            className="rounded-full p-2 text-stone-500 transition-all duration-200 hover:bg-stone-100/60 hover:text-stone-900"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </motion.button>
         </div>
 
         {/* Drawer body – scrollable */}
         <div className="flex-1 overflow-y-auto py-4">
-
           {/* Main nav links */}
-          <nav aria-label="Điều hướng di động" className="px-3 space-y-1">
+          <nav aria-label="Điều hướng di động" className="space-y-1 px-3">
             {navLinks.map((link, index) => (
               <motion.div
                 key={link.href}
@@ -382,10 +415,10 @@ export function Header() {
                 <Link
                   href={link.href}
                   className={cn(
-                    'flex items-center px-4 py-3 text-sm font-medium transition-all rounded-xl',
+                    'flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all',
                     pathname === link.href
                       ? 'bg-primary-50 text-primary-600'
-                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50',
+                      : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
                   )}
                 >
                   {link.label}
@@ -395,15 +428,15 @@ export function Header() {
           </nav>
 
           {/* Quick links: cart + notifications */}
-          <div className="mt-4 px-3 space-y-1 border-t border-stone-200/50 pt-4">
+          <div className="mt-4 space-y-1 border-t border-stone-200/50 px-3 pt-4">
             <Link
               href="/cart"
-              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors rounded-xl"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-stone-600 transition-colors hover:bg-stone-50 hover:text-stone-900"
             >
               <span className="text-lg">🛒</span>
               Giỏ hàng
               {cartCount > 0 && (
-                <span className="ml-auto min-w-[1.3rem] h-5 bg-gradient-to-r from-primary-500 to-primary-600 text-white text-[10px] rounded-full flex items-center justify-center font-semibold px-1">
+                <span className="from-primary-500 to-primary-600 ml-auto flex h-5 min-w-[1.3rem] items-center justify-center rounded-full bg-gradient-to-r px-1 text-[10px] font-semibold text-white">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
@@ -411,7 +444,7 @@ export function Header() {
             {isAuthenticated && (
               <Link
                 href="/notifications"
-                className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors rounded-xl"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-stone-600 transition-colors hover:bg-stone-50 hover:text-stone-900"
               >
                 <span className="text-lg">🔔</span>
                 Thông báo
@@ -420,21 +453,23 @@ export function Header() {
           </div>
 
           {/* Auth section */}
-          <div className="mt-4 px-3 border-t border-stone-200/50 pt-4 space-y-1">
+          <div className="mt-4 space-y-1 border-t border-stone-200/50 px-3 pt-4">
             {isAuthenticated && user ? (
               <>
                 {/* User identity */}
-                <div className="flex items-center gap-3 px-4 py-3 mb-2 bg-gradient-to-r from-primary-50/50 to-transparent rounded-xl">
+                <div className="from-primary-50/50 mb-2 flex items-center gap-3 rounded-xl bg-gradient-to-r to-transparent px-4 py-3">
                   {user.avatar?.url ? (
-                    <AppImage src={user.avatar.url} alt={user.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-primary-100 shrink-0" />
+                    <div className="ring-primary-100 relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2">
+                      <AppImage src={user.avatar.url} alt={user.name} className="object-cover" />
+                    </div>
                   ) : (
-                    <span className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm shrink-0">
+                    <span className="from-primary-400 to-primary-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-sm font-semibold text-white">
                       {avatarFallback}
                     </span>
                   )}
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-stone-900 truncate">{user.name}</p>
-                    <p className="text-xs text-stone-500 truncate">{user.email}</p>
+                    <p className="truncate text-sm font-medium text-stone-900">{user.name}</p>
+                    <p className="truncate text-xs text-stone-500">{user.email}</p>
                   </div>
                 </div>
 
@@ -442,7 +477,7 @@ export function Header() {
                 {user.role === 'shop_owner' && (
                   <Link
                     href="/shop/dashboard"
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-primary-600 hover:bg-primary-50/50 transition-colors rounded-xl"
+                    className="text-primary-600 hover:bg-primary-50/50 flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors"
                   >
                     <span>🏪</span>
                     Quản lý shop
@@ -451,7 +486,7 @@ export function Header() {
                 {user.role === 'admin' && (
                   <Link
                     href="/admin/dashboard"
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors rounded-xl"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
                   >
                     <span>⚙️</span>
                     Admin
@@ -464,8 +499,8 @@ export function Header() {
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      'block px-4 py-2.5 text-sm text-stone-600 hover:text-stone-900 hover:bg-stone-50 transition-colors rounded-xl',
-                      pathname === link.href && 'text-primary-600 bg-primary-50/50',
+                      'block rounded-xl px-4 py-2.5 text-sm text-stone-600 transition-colors hover:bg-stone-50 hover:text-stone-900',
+                      pathname === link.href && 'text-primary-600 bg-primary-50/50'
                     )}
                   >
                     {link.label}
@@ -475,7 +510,7 @@ export function Header() {
                 {/* Logout */}
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50/50 transition-colors mt-2 rounded-xl"
+                  className="mt-2 w-full rounded-xl px-4 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50/50"
                 >
                   Đăng xuất
                 </button>
@@ -484,13 +519,13 @@ export function Header() {
               <div className="flex flex-col gap-2 px-1 pt-1">
                 <Link
                   href="/login"
-                  className="block px-4 py-3 text-center rounded-xl text-sm font-medium border border-stone-200 text-stone-700 hover:bg-stone-50 transition-colors"
+                  className="block rounded-xl border border-stone-200 px-4 py-3 text-center text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
                 >
                   Đăng nhập
                 </Link>
                 <Link
                   href="/register"
-                  className="block px-4 py-3 text-center rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:shadow-lg hover:shadow-primary-500/30 transition-all"
+                  className="from-primary-500 to-primary-600 hover:shadow-primary-500/30 block rounded-xl bg-gradient-to-r px-4 py-3 text-center text-sm font-semibold text-white transition-all hover:shadow-lg"
                 >
                   Đăng ký
                 </Link>

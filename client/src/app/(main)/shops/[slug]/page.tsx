@@ -21,7 +21,7 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <svg
           key={i}
-          className={cn('w-4 h-4', i < stars ? 'text-yellow-400' : 'text-stone-200')}
+          className={cn('h-4 w-4', i < stars ? 'text-yellow-400' : 'text-stone-200')}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -34,11 +34,11 @@ function StarRating({ rating }: { rating: number }) {
 
 function ProductCardSkeleton() {
   return (
-    <div className="card-base overflow-hidden animate-pulse">
+    <div className="card-base animate-pulse overflow-hidden">
       <div className="aspect-video bg-stone-100" />
-      <div className="p-4 space-y-2">
-        <div className="h-5 bg-stone-100 rounded w-3/4" />
-        <div className="h-4 bg-stone-100 rounded w-1/3" />
+      <div className="space-y-2 p-4">
+        <div className="h-5 w-3/4 rounded bg-stone-100" />
+        <div className="h-4 w-1/3 rounded bg-stone-100" />
       </div>
     </div>
   );
@@ -55,7 +55,7 @@ function ProductPagination({
 }) {
   if (totalPages <= 1) return null;
   return (
-    <div className="flex items-center justify-center gap-1.5 mt-8">
+    <div className="mt-8 flex items-center justify-center gap-1.5">
       <Button
         variant="outline"
         size="sm"
@@ -72,8 +72,8 @@ function ProductPagination({
             key={p}
             onClick={() => onPageChange(p)}
             className={cn(
-              'w-9 h-9 rounded-lg text-sm font-medium transition-colors',
-              p === page ? 'bg-primary-600 text-white' : 'text-text-secondary hover:bg-stone-100',
+              'h-9 w-9 rounded-lg text-sm font-medium transition-colors',
+              p === page ? 'bg-primary-600 text-white' : 'text-text-secondary hover:bg-stone-100'
             )}
           >
             {p}
@@ -94,11 +94,7 @@ function ProductPagination({
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function ShopDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default function ShopDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const [productPage, setProductPage] = useState(1);
 
@@ -118,7 +114,7 @@ export default function ShopDetailPage({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <Spinner size="lg" label="Đang tải thông tin cửa hàng…" />
       </div>
     );
@@ -126,8 +122,8 @@ export default function ShopDetailPage({
 
   if (isError || !shop) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <Store className="w-12 h-12 text-stone-300" />
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <Store className="h-12 w-12 text-stone-300" />
         <p className="heading-sm text-text-secondary">Không tìm thấy cửa hàng này</p>
         <Link href="/shops">
           <Button variant="outline">Quay lại danh sách</Button>
@@ -148,26 +144,24 @@ export default function ShopDetailPage({
   return (
     <div className="bg-surface min-h-screen">
       {/* Cover Image Banner */}
-      <div className="relative h-56 md:h-72 overflow-hidden bg-stone-100">
+      <div className="relative h-56 overflow-hidden bg-stone-100 md:h-72">
         {shop.coverImage?.url ? (
           <AppImage
             src={shop.coverImage.url}
             alt={shop.name}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Store className="w-16 h-16 text-stone-300" />
+          <div className="flex h-full w-full items-center justify-center">
+            <Store className="h-16 w-16 text-stone-300" />
           </div>
         )}
-        {shop.coverImage?.url && (
-          <div className="absolute inset-0 bg-black/20" />
-        )}
+        {shop.coverImage?.url && <div className="absolute inset-0 bg-black/20" />}
       </div>
 
       <Container className="py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-text-tertiary mb-6">
+        <nav className="text-text-tertiary mb-6 flex items-center gap-2 text-sm">
           <Link href="/" className="hover:text-primary-600 transition-colors">
             Trang chủ
           </Link>
@@ -180,12 +174,12 @@ export default function ShopDetailPage({
         </nav>
 
         {/* Shop Header Card */}
-        <div className="card-base p-6 mb-8">
-          <div className="flex flex-col sm:flex-row gap-5">
+        <div className="card-base mb-8 p-6">
+          <div className="flex flex-col gap-5 sm:flex-row">
             {/* Avatar */}
-            <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md shrink-0 bg-stone-100 flex items-center justify-center self-start">
+            <div className="relative flex h-20 w-20 shrink-0 items-center justify-center self-start overflow-hidden rounded-full border-4 border-white bg-stone-100 shadow-md">
               {shop.logo?.url ? (
-                <AppImage src={shop.logo.url} alt="" className="w-full h-full object-cover" />
+                <AppImage src={shop.logo.url} alt="" className="object-cover" />
               ) : (
                 <span className="text-2xl font-semibold text-stone-400">
                   {shop.name.charAt(0).toUpperCase()}
@@ -194,18 +188,16 @@ export default function ShopDetailPage({
             </div>
 
             {/* Main Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-2 mb-1">
+            <div className="min-w-0 flex-1">
+              <div className="mb-1 flex flex-wrap items-center gap-2">
                 <h1 className="heading-md">{shop.name}</h1>
-                {shop.isVerified && (
-                  <Badge variant="success">Đã xác thực</Badge>
-                )}
+                {shop.isVerified && <Badge variant="success">Đã xác thực</Badge>}
               </div>
 
-              <div className="flex items-center gap-3 flex-wrap text-sm text-text-secondary">
+              <div className="text-text-secondary flex flex-wrap items-center gap-3 text-sm">
                 <div className="flex items-center gap-1.5">
                   <StarRating rating={shop.stats.rating} />
-                  <span className="font-medium text-text-primary">
+                  <span className="text-text-primary font-medium">
                     {shop.stats.rating.toFixed(1)}
                   </span>
                   <span>({shop.stats.totalReviews} đánh giá)</span>
@@ -216,37 +208,35 @@ export default function ShopDetailPage({
                 <span>{shop.stats.totalProducts} sản phẩm</span>
               </div>
 
-              {shop.description && (
-                <p className="body-sm mt-3">{shop.description}</p>
-              )}
+              {shop.description && <p className="body-sm mt-3">{shop.description}</p>}
             </div>
           </div>
 
           {/* Details grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-5 border-t border-border-light text-sm">
+          <div className="border-border-light mt-6 grid grid-cols-1 gap-4 border-t pt-5 text-sm sm:grid-cols-2">
             <div className="flex gap-2.5">
-              <MapPin className="w-4 h-4 text-text-tertiary shrink-0 mt-0.5" />
+              <MapPin className="text-text-tertiary mt-0.5 h-4 w-4 shrink-0" />
               <span className="text-text-secondary">{fullAddress}</span>
             </div>
             <div className="flex gap-2.5">
-              <Phone className="w-4 h-4 text-text-tertiary shrink-0 mt-0.5" />
+              <Phone className="text-text-tertiary mt-0.5 h-4 w-4 shrink-0" />
               <span className="text-text-secondary">{shop.phone}</span>
             </div>
           </div>
 
           {/* Operating Hours */}
           {shop.operatingHours.length > 0 && (
-            <div className="mt-5 pt-5 border-t border-border-light">
-              <p className="text-sm font-semibold text-text-primary mb-3">Giờ hoạt động</p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+            <div className="border-border-light mt-5 border-t pt-5">
+              <p className="text-text-primary mb-3 text-sm font-semibold">Giờ hoạt động</p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
                 {shop.operatingHours.map((h) => (
                   <div
                     key={h.day}
                     className={cn(
-                      'text-center rounded-lg p-2 text-xs',
+                      'rounded-lg p-2 text-center text-xs',
                       h.isClosed
-                        ? 'bg-stone-100 text-text-tertiary'
-                        : 'bg-primary-50 text-primary-700',
+                        ? 'text-text-tertiary bg-stone-100'
+                        : 'bg-primary-50 text-primary-700'
                     )}
                   >
                     <p className="font-semibold">{DAY_LABELS[h.day]}</p>
@@ -264,45 +254,43 @@ export default function ShopDetailPage({
           )}
 
           {/* Delivery Info */}
-          <div className="mt-5 pt-5 border-t border-border-light flex flex-wrap gap-4 text-sm text-text-secondary">
+          <div className="border-border-light text-text-secondary mt-5 flex flex-wrap gap-4 border-t pt-5 text-sm">
             <div className="flex items-center gap-1.5">
-              <Car className="w-4 h-4 text-text-tertiary" />
+              <Car className="text-text-tertiary h-4 w-4" />
               <span>Phạm vi giao hàng: {shop.deliveryConfig.maxDistance} km</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-text-tertiary" />
+              <Clock className="text-text-tertiary h-4 w-4" />
               <span>Thời gian dự kiến: {shop.deliveryConfig.estimatedTime}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Tag className="w-4 h-4 text-text-tertiary" />
-              <span>
-                Miễn phí giao từ {formatPrice(shop.deliveryConfig.freeAboveAmount)}
-              </span>
+              <Tag className="text-text-tertiary h-4 w-4" />
+              <span>Miễn phí giao từ {formatPrice(shop.deliveryConfig.freeAboveAmount)}</span>
             </div>
           </div>
         </div>
 
         {/* Products Section */}
         <section>
-          <div className="flex items-center justify-between mb-5">
+          <div className="mb-5 flex items-center justify-between">
             <h2 className="heading-sm">Sản phẩm</h2>
             <span className="body-sm">{productsPagination.total} sản phẩm</span>
           </div>
 
           {productsLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {Array.from({ length: 8 }).map((_, i) => (
                 <ProductCardSkeleton key={i} />
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="text-center py-16">
-              <Package className="w-10 h-10 text-stone-300 mx-auto mb-3" />
+            <div className="py-16 text-center">
+              <Package className="mx-auto mb-3 h-10 w-10 text-stone-300" />
               <p className="body-base">Cửa hàng chưa có sản phẩm nào.</p>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {products.map((product) => {
                   const img = product.images[0]?.url ?? null;
                   const discountPct =
@@ -312,16 +300,16 @@ export default function ShopDetailPage({
                   return (
                     <Link key={product._id} href={`/products/${product.slug}`} className="group">
                       <div className="card-base card-hover overflow-hidden">
-                        <div className="aspect-video bg-stone-50 overflow-hidden relative">
+                        <div className="relative aspect-video overflow-hidden bg-stone-50">
                           {img ? (
                             <AppImage
                               src={img}
                               alt={product.name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Package className="w-8 h-8 text-stone-300" />
+                            <div className="flex h-full w-full items-center justify-center">
+                              <Package className="h-8 w-8 text-stone-300" />
                             </div>
                           )}
                           {discountPct && (
@@ -333,20 +321,20 @@ export default function ShopDetailPage({
                           )}
                         </div>
                         <div className="p-4">
-                          <p className="font-semibold text-text-primary line-clamp-1 group-hover:text-primary-600 transition-colors">
+                          <p className="text-text-primary group-hover:text-primary-600 line-clamp-1 font-semibold transition-colors">
                             {product.name}
                           </p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="text-primary-600 font-bold text-sm">
+                          <div className="mt-2 flex items-center gap-2">
+                            <span className="text-primary-600 text-sm font-bold">
                               {formatPrice(product.salePrice ?? product.price)}
                             </span>
                             {product.salePrice && product.salePrice < product.price && (
-                              <span className="text-xs text-text-tertiary line-through">
+                              <span className="text-text-tertiary text-xs line-through">
                                 {formatPrice(product.price)}
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-text-tertiary mt-1">
+                          <p className="text-text-tertiary mt-1 text-xs">
                             {product.stock.isUnlimited
                               ? 'Còn hàng'
                               : product.stock.quantity > 0

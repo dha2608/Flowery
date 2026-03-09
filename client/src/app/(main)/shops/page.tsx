@@ -74,7 +74,7 @@ function AnimatedStarRating({ rating, size = 'sm' }: { rating: number; size?: 's
           <Star
             className={cn(
               iconSize,
-              i < stars ? 'text-amber-400 fill-amber-400' : 'text-stone-200 fill-stone-200',
+              i < stars ? 'fill-amber-400 text-amber-400' : 'fill-stone-200 text-stone-200'
             )}
           />
         </motion.div>
@@ -89,14 +89,14 @@ function FilterTag({ label, onRemove }: { label: string; onRemove: () => void })
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-50 to-purple-50 text-violet-700 rounded-full text-sm font-medium shadow-sm"
+      className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-50 to-purple-50 px-3 py-1.5 text-sm font-medium text-violet-700 shadow-sm"
     >
       {label}
       <button
         onClick={onRemove}
-        className="hover:bg-violet-100 rounded-full p-0.5 transition-colors"
+        className="rounded-full p-0.5 transition-colors hover:bg-violet-100"
       >
-        <X className="w-3.5 h-3.5" />
+        <X className="h-3.5 w-3.5" />
       </button>
     </motion.span>
   );
@@ -104,72 +104,77 @@ function FilterTag({ label, onRemove }: { label: string; onRemove: () => void })
 
 function ShopCardSkeleton() {
   return (
-    <div className="glass rounded-2xl overflow-hidden">
-      <div className="h-40 bg-gradient-to-br from-stone-100 to-stone-50 animate-shimmer" />
-      <div className="p-5 space-y-3">
+    <div className="glass overflow-hidden rounded-2xl">
+      <div className="animate-shimmer h-40 bg-gradient-to-br from-stone-100 to-stone-50" />
+      <div className="space-y-3 p-5">
         <div className="flex items-start gap-3">
-          <div className="w-12 h-12 rounded-full bg-stone-100 animate-shimmer" />
+          <div className="animate-shimmer h-12 w-12 rounded-full bg-stone-100" />
           <div className="flex-1 space-y-2">
-            <div className="h-5 bg-stone-100 rounded-lg w-3/4 animate-shimmer" />
-            <div className="h-4 bg-stone-100 rounded-lg w-1/2 animate-shimmer" />
+            <div className="animate-shimmer h-5 w-3/4 rounded-lg bg-stone-100" />
+            <div className="animate-shimmer h-4 w-1/2 rounded-lg bg-stone-100" />
           </div>
         </div>
-        <div className="h-4 bg-stone-100 rounded-lg w-full animate-shimmer" />
-        <div className="h-4 bg-stone-100 rounded-lg w-2/3 animate-shimmer" />
+        <div className="animate-shimmer h-4 w-full rounded-lg bg-stone-100" />
+        <div className="animate-shimmer h-4 w-2/3 rounded-lg bg-stone-100" />
       </div>
     </div>
   );
 }
 
 function ShopCard({ shop, index }: { shop: Shop; index: number }) {
-  const fullAddress = [shop.address.street, shop.address.ward, shop.address.district, shop.address.city]
+  const fullAddress = [
+    shop.address.street,
+    shop.address.ward,
+    shop.address.district,
+    shop.address.city,
+  ]
     .filter(Boolean)
     .join(', ');
 
   return (
     <motion.div variants={cardVariants} custom={index}>
-      <Link href={`/shops/${shop.slug}`} className="block group">
+      <Link href={`/shops/${shop.slug}`} className="group block">
         <motion.div
-          className="glass rounded-2xl overflow-hidden"
+          className="glass overflow-hidden rounded-2xl"
           whileHover={{ y: -4 }}
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         >
           {/* Cover Image */}
-          <div className="h-40 relative overflow-hidden bg-gradient-to-br from-violet-100 to-purple-50">
+          <div className="relative h-40 overflow-hidden bg-gradient-to-br from-violet-100 to-purple-50">
             {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
             {shop.coverImage?.url ? (
               <AppImage
                 src={shop.coverImage.url}
                 alt={shop.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Store className="w-12 h-12 text-violet-200" />
+              <div className="flex h-full w-full items-center justify-center">
+                <Store className="h-12 w-12 text-violet-200" />
               </div>
             )}
 
             {/* Verified badge */}
             {shop.isVerified && (
               <div className="absolute top-3 right-3 z-20">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 text-white text-xs font-semibold rounded-full shadow-lg">
-                  <Verified className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                  <Verified className="h-3.5 w-3.5" />
                   Đã xác thực
                 </span>
               </div>
             )}
 
             {/* Bottom stats overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 z-20">
-              <div className="flex items-center justify-between text-white text-xs">
-                <span className="flex items-center gap-1 glass-dark px-2 py-1 rounded-full">
-                  <Package className="w-3 h-3" />
+            <div className="absolute right-0 bottom-0 left-0 z-20 p-3">
+              <div className="flex items-center justify-between text-xs text-white">
+                <span className="glass-dark flex items-center gap-1 rounded-full px-2 py-1">
+                  <Package className="h-3 w-3" />
                   {shop.stats.totalProducts} sản phẩm
                 </span>
-                <span className="flex items-center gap-1 glass-dark px-2 py-1 rounded-full">
-                  <ShoppingBag className="w-3 h-3" />
+                <span className="glass-dark flex items-center gap-1 rounded-full px-2 py-1">
+                  <ShoppingBag className="h-3 w-3" />
                   {shop.stats.totalOrders} đơn hàng
                 </span>
               </div>
@@ -180,21 +185,21 @@ function ShopCard({ shop, index }: { shop: Shop; index: number }) {
           <div className="p-5">
             <div className="flex items-start gap-3">
               {/* Avatar */}
-              <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-white shadow-lg shrink-0 bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+              <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-white bg-gradient-to-br from-violet-100 to-purple-100 shadow-lg transition-transform duration-300 group-hover:scale-105">
                 {shop.logo?.url ? (
-                  <AppImage src={shop.logo.url} alt="" className="w-full h-full object-cover" />
+                  <AppImage src={shop.logo.url} alt="" className="object-cover" />
                 ) : (
-                  <span className="text-xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-xl font-bold text-transparent">
                     {shop.name.charAt(0).toUpperCase()}
                   </span>
                 )}
               </div>
 
               <div className="min-w-0 flex-1">
-                <h3 className="font-bold text-stone-800 group-hover:text-violet-600 transition-colors line-clamp-1 text-lg">
+                <h3 className="line-clamp-1 text-lg font-bold text-stone-800 transition-colors group-hover:text-violet-600">
                   {shop.name}
                 </h3>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="mt-1 flex items-center gap-2">
                   <AnimatedStarRating rating={shop.stats.rating} />
                   <span className="text-sm text-stone-500">
                     {shop.stats.rating.toFixed(1)} ({shop.stats.totalReviews})
@@ -204,9 +209,9 @@ function ShopCard({ shop, index }: { shop: Shop; index: number }) {
             </div>
 
             {/* Address */}
-            <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-stone-50 to-stone-100/50">
-              <p className="text-sm text-stone-600 line-clamp-2 flex gap-2 items-start">
-                <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-violet-500" />
+            <div className="mt-4 rounded-xl bg-gradient-to-r from-stone-50 to-stone-100/50 p-3">
+              <p className="line-clamp-2 flex items-start gap-2 text-sm text-stone-600">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-violet-500" />
                 {fullAddress}
               </p>
             </div>
@@ -215,9 +220,9 @@ function ShopCard({ shop, index }: { shop: Shop; index: number }) {
             <motion.div
               initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
-              className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="mt-4 opacity-0 transition-opacity group-hover:opacity-100"
             >
-              <span className="block w-full text-center py-2.5 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-medium rounded-xl shadow-lg shadow-violet-500/25">
+              <span className="block w-full rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 py-2.5 text-center font-medium text-white shadow-lg shadow-violet-500/25">
                 Xem cửa hàng →
               </span>
             </motion.div>
@@ -266,10 +271,10 @@ function ShopPagination({
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               className={cn(
-                'w-10 h-10 rounded-xl text-sm font-semibold transition-all',
+                'h-10 w-10 rounded-xl text-sm font-semibold transition-all',
                 p === page
                   ? 'bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg shadow-violet-500/25'
-                  : 'glass text-stone-600 hover:text-violet-600',
+                  : 'glass text-stone-600 hover:text-violet-600'
               )}
             >
               {p}
@@ -323,12 +328,12 @@ export default function ShopsPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-white to-purple-50" />
         <motion.div
-          className="absolute top-20 -left-32 w-96 h-96 bg-gradient-to-br from-violet-200/30 to-purple-300/30 rounded-full blur-3xl"
+          className="absolute top-20 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-violet-200/30 to-purple-300/30 blur-3xl"
           animate={{
             x: [0, 50, 0],
             y: [0, 30, 0],
@@ -336,7 +341,7 @@ export default function ShopsPage() {
           transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute bottom-20 -right-32 w-80 h-80 bg-gradient-to-br from-pink-200/30 to-rose-300/30 rounded-full blur-3xl"
+          className="absolute -right-32 bottom-20 h-80 w-80 rounded-full bg-gradient-to-br from-pink-200/30 to-rose-300/30 blur-3xl"
           animate={{
             x: [0, -40, 0],
             y: [0, -20, 0],
@@ -345,14 +350,14 @@ export default function ShopsPage() {
         />
       </div>
 
-      <Container className="py-10 relative z-10">
+      <Container className="relative z-10 py-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-3 mb-2">
+          <div className="mb-2 flex items-center gap-3">
             <motion.span
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -360,11 +365,11 @@ export default function ShopsPage() {
             >
               🏪
             </motion.span>
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-stone-800 via-violet-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="bg-gradient-to-r from-stone-800 via-violet-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent md:text-4xl">
               Cửa hàng Hoa
             </h1>
           </div>
-          <p className="text-stone-600 text-lg">Tìm cửa hàng hoa uy tín gần bạn</p>
+          <p className="text-lg text-stone-600">Tìm cửa hàng hoa uy tín gần bạn</p>
         </motion.div>
 
         {/* Toolbar */}
@@ -372,9 +377,9 @@ export default function ShopsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass rounded-2xl p-4 mb-6"
+          className="glass mb-6 rounded-2xl p-4"
         >
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
             {/* City select */}
             <div className="relative">
               <select
@@ -383,7 +388,7 @@ export default function ShopsPage() {
                   setCity(e.target.value);
                   setPage(1);
                 }}
-                className="appearance-none bg-white/80 border border-stone-200 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium text-stone-700 hover:border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-100 focus:border-violet-400 cursor-pointer min-w-[180px] transition-all"
+                className="min-w-[180px] cursor-pointer appearance-none rounded-xl border border-stone-200 bg-white/80 px-4 py-2.5 pr-10 text-sm font-medium text-stone-700 transition-all hover:border-violet-300 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 focus:outline-none"
               >
                 {CITY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -391,27 +396,27 @@ export default function ShopsPage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+              <ChevronDown className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-stone-400" />
             </div>
 
             {/* Search */}
-            <div className="flex-1 flex gap-2 min-w-0">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <div className="flex min-w-0 flex-1 gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-stone-400" />
                 <input
                   type="text"
                   placeholder="Tìm tên cửa hàng…"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/80 border border-stone-200 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 outline-none transition-all"
+                  className="w-full rounded-xl border border-stone-200 bg-white/80 py-2.5 pr-4 pl-10 transition-all outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
                 />
               </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSearch}
-                className="px-5 py-2.5 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-medium rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 transition-shadow"
+                className="rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 px-5 py-2.5 font-medium text-white shadow-lg shadow-violet-500/25 transition-shadow hover:shadow-xl hover:shadow-violet-500/30"
               >
                 Tìm
               </motion.button>
@@ -425,10 +430,10 @@ export default function ShopsPage() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="flex items-center gap-2 flex-wrap mt-4 pt-4 border-t border-stone-200/50"
+                className="mt-4 flex flex-wrap items-center gap-2 border-t border-stone-200/50 pt-4"
               >
-                <span className="text-sm text-stone-500 flex items-center gap-1">
-                  <Sparkles className="w-4 h-4" />
+                <span className="flex items-center gap-1 text-sm text-stone-500">
+                  <Sparkles className="h-4 w-4" />
                   Đang lọc:
                 </span>
                 {city && (
@@ -454,7 +459,7 @@ export default function ShopsPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleClearFilters}
-                  className="text-sm text-violet-600 hover:text-violet-700 font-semibold ml-2"
+                  className="ml-2 text-sm font-semibold text-violet-600 hover:text-violet-700"
                 >
                   Xoá tất cả
                 </motion.button>
@@ -465,13 +470,10 @@ export default function ShopsPage() {
 
         {/* Results count */}
         {!isLoading && !isError && pagination.total > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-6 px-1"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6 px-1">
             <p className="text-sm text-stone-600">
-              Tìm thấy <span className="font-semibold text-stone-800">{pagination.total}</span> cửa hàng
+              Tìm thấy <span className="font-semibold text-stone-800">{pagination.total}</span> cửa
+              hàng
             </p>
           </motion.div>
         )}
@@ -481,14 +483,14 @@ export default function ShopsPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass rounded-2xl text-center py-20 space-y-4"
+            className="glass space-y-4 rounded-2xl py-20 text-center"
           >
-            <AlertCircle className="w-12 h-12 text-rose-400 mx-auto" />
+            <AlertCircle className="mx-auto h-12 w-12 text-rose-400" />
             <p className="text-lg font-semibold text-stone-700">Đã xảy ra lỗi khi tải dữ liệu</p>
             <p className="text-stone-500">Vui lòng thử lại sau</p>
           </motion.div>
         ) : isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 9 }).map((_, i) => (
               <ShopCardSkeleton key={i} />
             ))}
@@ -497,15 +499,19 @@ export default function ShopsPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass rounded-2xl text-center py-24 space-y-4"
+            className="glass space-y-4 rounded-2xl py-24 text-center"
           >
             <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-              <Store className="w-16 h-16 text-stone-300 mx-auto" />
+              <Store className="mx-auto h-16 w-16 text-stone-300" />
             </motion.div>
             <p className="text-xl font-semibold text-stone-700">Không tìm thấy cửa hàng nào</p>
             <p className="text-stone-500">Hãy thử thay đổi thành phố hoặc từ khoá tìm kiếm</p>
             {hasFilters && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pt-4">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="pt-4"
+              >
                 <Button variant="outline" onClick={handleClearFilters} className="glass-button">
                   Xoá bộ lọc
                 </Button>
@@ -518,7 +524,7 @@ export default function ShopsPage() {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
             >
               {shops.map((shop, index) => (
                 <ShopCard key={shop._id} shop={shop} index={index} />
