@@ -133,8 +133,8 @@ export default function AdminShopsPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-gray-900">{shop.owner.name}</p>
-                        <p className="text-xs text-gray-400">{shop.owner.email}</p>
+                        <p className="text-gray-900">{shop.owner?.name ?? '—'}</p>
+                        <p className="text-xs text-gray-400">{shop.owner?.email ?? '—'}</p>
                       </td>
                       <td className="px-4 py-3 text-gray-600">
                         {shop.phone ?? <span className="text-gray-300">—</span>}
